@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VBFormatter — Chuẩn hóa Văn bản Hành chính &amp; Đảng</title>
+  <meta name="description" content="Công cụ tự động chuẩn hóa văn bản hành chính (NĐ30) và văn bản Đảng (HD36). Hỗ trợ DOCX, PDF, OCR và Plaintext." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <!-- ═══════════════════ SIDEBAR NAV ═══════════════════ -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">VBFormatter</span>
+        <span class="brand-sub">NĐ30 &amp; HD36</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="home" id="nav-home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Trang chủ</span>
+      </button>
+      <button class="nav-item" data-view="upload" id="nav-upload">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Upload File</span>
+      </button>
+      <button class="nav-item" data-view="text" id="nav-text">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>Nhập Text</span>
+      </button>
+      <button class="nav-item" data-view="guide" id="nav-guide">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Hướng dẫn</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="footer-badge">NĐ30 &amp; HD36</div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+  <main id="main-content" class="main-content">
+
+    <!-- ── MOBILE HEADER ── -->
+    <header class="mobile-header">
+      <button id="menu-toggle" class="menu-toggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-brand">VBFormatter</span>
+    </header>
+
+    <!-- ═══ VIEW: HOME ═══ -->
+    <section id="view-home" class="view active">
+      <div class="hero">
+        <div class="hero-badge">Offline-First • Zero-Cost</div>
+        <h1 class="hero-title">Chuẩn hóa<br/><span class="gradient-text">Văn bản Hành chính &amp; Đảng</span></h1>
+        <p class="hero-desc">Tự động chuẩn hóa văn bản theo NĐ30/2020 (hành chính) và HD36/2018 (Đảng).<br/>Hỗ trợ DOCX, PDF, ảnh (OCR) và nhập văn bản trực tiếp.</p>
+
+        <!-- ── Standard Selector ── -->
+        <div class="standard-selector" id="standard-selector">
+          <button class="standard-btn active" data-standard="nd30" id="std-nd30">
+            <div class="standard-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="standard-info">
+              <span class="standard-name">Nghị định 30</span>
+              <span class="standard-desc">Văn bản hành chính</span>
+            </div>
+          </button>
+          <button class="standard-btn" data-standard="hd36" id="std-hd36">
+            <div class="standard-icon standard-icon-dang">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="standard-info">
+              <span class="standard-name">Hướng dẫn 36</span>
+              <span class="standard-desc">Văn bản Đảng</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <button class="feature-card" data-action="go-upload" id="feature-upload">
+          <div class="feature-icon upload-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+          </div>
+          <h3>Upload File</h3>
+          <p>DOCX, PDF hoặc ảnh scan</p>
+        </button>
+
+        <button class="feature-card" data-action="go-text" id="feature-text">
+          <div class="feature-icon text-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <h3>Nhập Plaintext</h3>
+          <p>Copy & paste nội dung văn bản</p>
+        </button>
+
+        <button class="feature-card" data-action="go-guide" id="feature-guide">
+          <div class="feature-icon guide-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <h3>Hướng dẫn ND30</h3>
+          <p>Quy chuẩn thể thức chi tiết</p>
+        </button>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value">2</span>
+          <span class="stat-label">Tiêu chuẩn</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">24+</span>
+          <span class="stat-label">Loại văn bản</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Đúng thể thức</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ VIEW: UPLOAD ═══ -->
+    <section id="view-upload" class="view">
+      <div class="view-header">
+        <h2>Upload File</h2>
+        <p class="view-subtitle">Kéo thả hoặc chọn file DOCX, PDF, ảnh để chuẩn hóa</p>
+      </div>
+
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-zone-content">
+          <div class="drop-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <p class="drop-text">Kéo & thả file vào đây</p>
+          <p class="drop-hint">hoặc nhấn để chọn file</p>
+          <div class="drop-formats">
+            <span class="format-tag">.docx</span>
+            <span class="format-tag">.pdf</span>
+            <span class="format-tag">.jpg</span>
+            <span class="format-tag">.png</span>
+          </div>
+        </div>
+        <input type="file" id="file-input" accept=".docx,.pdf,.jpg,.jpeg,.png,.webp" hidden />
+      </div>
+
+      <div id="file-info" class="file-info hidden">
+        <div class="file-info-content">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div class="file-details">
+            <span id="file-name" class="file-name">—</span>
+            <span id="file-size" class="file-size">—</span>
+          </div>
+          <button id="file-remove" class="file-remove" aria-label="Xóa file">✕</button>
+        </div>
+      </div>
+
+      <!-- ── Model AI Selector (upload) ── -->
+      <div id="model-panel-upload" class="model-panel hidden">
+        <button type="button" class="model-panel-header" id="model-panel-toggle-upload" aria-expanded="false">
+          <div class="model-panel-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+            <span>Model AI</span>
+          </div>
+          <div class="model-panel-current">
+            <span id="model-current-upload" class="model-current-name">—</span>
+            <svg class="model-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="model-panel-body" id="model-panel-body-upload" hidden>
+          <!-- Vision list (PDF/Ảnh) — priority list giống Text -->
+          <div id="model-vision-list" class="model-section">
+            <div class="model-priority-list" id="vision-priority-list">
+              <!-- rendered by JS -->
+            </div>
+          </div>
+          <!-- Text list (DOCX) -->
+          <div id="model-text-list-upload" class="model-section hidden">
+            <div class="model-priority-list" id="text-priority-list-upload">
+              <!-- rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-process-file" class="btn-primary btn-process hidden" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Bắt đầu Chuẩn hóa</span>
+      </button>
+    </section>
+
+    <!-- ═══ VIEW: TEXT INPUT ═══ -->
+    <section id="view-text" class="view">
+      <div class="view-header">
+        <h2>Nhập Văn bản</h2>
+        <p class="view-subtitle">Paste nội dung văn bản hành chính cần chuẩn hóa</p>
+      </div>
+
+      <div class="text-input-wrapper">
+        <div class="text-input-focus-bar"></div>
+        <textarea id="text-input" class="text-input" placeholder="Dán nội dung văn bản hành chính vào đây...&#10;&#10;Ví dụ:&#10;UBND TỈNH AN GIANG&#10;Số: 05/QĐ-UBND&#10;Hà Nội, ngày 05 tháng 03 năm 2024&#10;QUYẾT ĐỊNH&#10;Về việc ..." rows="16"></textarea>
+        <div class="text-counter">
+          <span id="char-count">0</span> ký tự
+        </div>
+      </div>
+
+      <!-- ── Model AI Selector (text) ── -->
+      <div id="model-panel-text" class="model-panel">
+        <button type="button" class="model-panel-header" id="model-panel-toggle-text" aria-expanded="false">
+          <div class="model-panel-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+            <span>Model AI</span>
+          </div>
+          <div class="model-panel-current">
+            <span id="model-current-text" class="model-current-name">—</span>
+            <svg class="model-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </button>
+        <div class="model-panel-body" id="model-panel-body-text" hidden>
+          <div class="model-section">
+            <div class="model-priority-list" id="text-priority-list-text">
+              <!-- rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-process-text" class="btn-primary btn-process" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Phân tích & Tạo DOCX</span>
+      </button>
+    </section>
+
+    <!-- ═══ VIEW: PROCESSING ═══ -->
+    <section id="view-processing" class="view">
+      <div class="processing-container">
+        <div class="processing-spinner">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring ring-2"></div>
+          <div class="spinner-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+        </div>
+        <h2 class="processing-title">Đang xử lý...</h2>
+        <p id="processing-status" class="processing-status">Đang phân tích cấu trúc văn bản</p>
+        <div class="processing-steps">
+          <div id="step-parse" class="step-item">
+            <div class="step-dot"></div>
+            <span>Đọc nội dung</span>
+          </div>
+          <div id="step-ocr" class="step-item" style="display:none">
+            <div class="step-dot"></div>
+            <span>AI nhận dạng văn bản (OpenRouter)</span>
+          </div>
+          <div id="step-analyze" class="step-item">
+            <div class="step-dot"></div>
+            <span>Phân tích cấu trúc</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ VIEW: REVIEW ═══ -->
+    <section id="view-review" class="view">
+
+      <!-- ── Sticky Action Bar ── -->
+      <div class="review-topbar">
+        <div class="review-topbar-left">
+          <div class="review-topbar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="review-topbar-title">Kiểm tra &amp; Chỉnh sửa</h2>
+            <p class="review-topbar-sub">Xem lại kết quả phân tích, điều chỉnh và xuất DOCX</p>
+          </div>
+        </div>
+        <div class="review-topbar-actions">
+          <button type="button" id="btn-back-input" class="btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            <span>Quay lại</span>
+          </button>
+          <button type="button" id="btn-create-docx" class="btn-primary btn-download">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span>Tạo file DOCX</span>
+          </button>
+        </div>
+      </div>
+
+      <form id="review-form" class="review-form" onsubmit="return false">
+
+        <!-- ── CARD 1: Phân loại Văn bản ── -->
+        <div class="form-section form-card">
+          <h3 class="form-section-title">1. Phân loại Văn bản</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="review-loai-vb">Loại văn bản</label>
+              <select id="review-loai-vb">
+                <option value="">— Chọn —</option>
+                <optgroup label="NĐ30 — Hành chính" id="optgroup-nd30">
+                  <option value="QD">Quyết định</option>
+                  <option value="NQ">Nghị quyết</option>
+                  <option value="CV">Công văn</option>
+                  <option value="TB">Thông báo</option>
+                  <option value="TTR">Tờ trình</option>
+                  <option value="BC">Báo cáo</option>
+                  <option value="KH">Kế hoạch</option>
+                  <option value="CT">Chỉ thị</option>
+                  <option value="HD">Hướng dẫn</option>
+                  <option value="BB">Biên bản</option>
+                </optgroup>
+                <optgroup label="HD36 — Văn bản Đảng" id="optgroup-hd36">
+                  <option value="D_NQ">Nghị quyết (Đảng)</option>
+                  <option value="D_CT">Chỉ thị (Đảng)</option>
+                  <option value="D_KL">Kết luận</option>
+                  <option value="D_QD">Quyết định (Đảng)</option>
+                  <option value="D_QDI">Quy định</option>
+                  <option value="D_QC">Quy chế</option>
+                  <option value="D_BC">Báo cáo (Đảng)</option>
+                  <option value="D_TTR">Tờ trình (Đảng)</option>
+                  <option value="D_TB">Thông báo (Đảng)</option>
+                  <option value="D_HD">Hướng dẫn (Đảng)</option>
+                  <option value="D_CTR">Chương trình</option>
+                  <option value="D_TT">Thông tri</option>
+                  <option value="D_CV">Công văn (Đảng)</option>
+                  <option value="D_BB">Biên bản (Đảng)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group" id="section-ten-loai">
+              <label for="review-ten-loai">Tên loại VB (IN HOA)</label>
+              <input type="text" id="review-ten-loai" placeholder="VD: QUYẾT ĐỊNH" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 2: Thể thức Đầu trang ── -->
+        <div class="form-section form-card">
+          <h3 class="form-section-title">2. Thể thức Đầu trang</h3>
+          
+          <div class="form-grid" style="margin-bottom: var(--space-md);">
+            <div class="form-group">
+              <label for="review-cq-chu-quan">Cơ quan chủ quản (Nếu có)</label>
+              <input type="text" id="review-cq-chu-quan" placeholder="VD: UBND TỈNH AN GIANG" />
+            </div>
+            <div class="form-group">
+              <label for="review-cq-ban-hanh">Cơ quan ban hành (IN HOA)</label>
+              <input type="text" id="review-cq-ban-hanh" placeholder="VD: SỞ TÀI CHÍNH" />
+            </div>
+          </div>
+
+          <div class="form-grid form-grid-3" style="margin-bottom: var(--space-md);">
+            <div class="form-group">
+              <label for="review-so">Số</label>
+              <input type="text" id="review-so" placeholder="05" />
+            </div>
+            <div class="form-group">
+              <label for="review-ky-hieu">Ký hiệu</label>
+              <input type="text" id="review-ky-hieu" placeholder="QĐ-UBND" />
+            </div>
+            <div class="form-group">
+              <label for="review-dia-danh">Địa danh</label>
+              <input type="text" id="review-dia-danh" placeholder="Hà Nội" />
+            </div>
+          </div>
+
+          <div class="form-grid form-grid-3">
+            <div class="form-group">
+              <label for="review-ngay">Ngày</label>
+              <input type="text" id="review-ngay" placeholder="05" />
+            </div>
+            <div class="form-group">
+              <label for="review-thang">Tháng</label>
+              <input type="text" id="review-thang" placeholder="03" />
+            </div>
+            <div class="form-group">
+              <label for="review-nam">Năm</label>
+              <input type="text" id="review-nam" placeholder="2024" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 3: Trích yếu & Mở đầu ── -->
+        <div class="form-section form-card">
+          <h3 class="form-section-title">3. Trích yếu & Mở đầu</h3>
+          
+          <div class="form-group" style="margin-bottom: var(--space-md);">
+            <label id="label-trich-yeu" for="review-trich-yeu">Trích yếu</label>
+            <textarea id="review-trich-yeu" rows="2" placeholder="Về việc..."></textarea>
+          </div>
+
+          <div class="form-group" id="section-chuc-danh-ban-hanh" style="margin-bottom: var(--space-md);">
+            <label for="review-chuc-danh-ban-hanh">Chức danh ban hành</label>
+            <input type="text" id="review-chuc-danh-ban-hanh" placeholder="VD: CHỦ TỊCH ỦY BAN NHÂN DÂN THÀNH PHỐ CHÂU ĐỐC" />
+          </div>
+
+          <div class="form-group" id="section-can-cu" style="margin-bottom: var(--space-md);">
+            <label for="review-can-cu">Căn cứ ban hành</label>
+            <textarea id="review-can-cu" rows="3" placeholder="Mỗi dòng = 1 căn cứ&#10;VD: Căn cứ Luật Tổ chức chính quyền địa phương năm 2015..."></textarea>
+          </div>
+
+          <div class="form-group" id="section-kinh-gui">
+            <label for="review-kinh-gui">Kính gửi</label>
+            <textarea id="review-kinh-gui" rows="2" placeholder="Mỗi dòng = 1 nơi kính gửi"></textarea>
+          </div>
+        </div>
+
+        <!-- ── CARD 4: Phần Nội dung chính ── -->
+        <div class="form-section form-card form-section-content">
+          <h3 class="form-section-title">4. Phần Nội dung chính</h3>
+          <div class="noi-dung-split">
+            <div class="form-group">
+              <label for="review-noi-dung-raw">
+                Soạn thảo nội dung
+                <span class="label-secondary">— mỗi dòng = 1 mục</span>
+              </label>
+              <textarea id="review-noi-dung-raw" rows="22"
+                placeholder="Điều 1. ...&#10;1. Nội dung khoản&#10;a) Chi tiết điểm"></textarea>
+              <p id="noi-dung-hint" class="form-hint"></p>
+            </div>
+            <div class="noi-dung-preview-panel">
+              <div class="noi-dung-preview-label">Cấu trúc đã nhận diện</div>
+              <div id="review-noi-dung-preview" class="noi-dung-preview"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CARD 5: Ký tên & Nơi nhận ── -->
+        <div class="form-section form-card">
+          <h3 class="form-section-title">5. Ký tên & Nơi nhận</h3>
+          
+          <div class="form-grid form-grid-3" style="margin-bottom: var(--space-md);">
+            <div class="form-group">
+              <label for="review-quyen-han">Quyền hạn ký</label>
+              <input type="text" id="review-quyen-han" placeholder="VD: TM. ỦY BAN NHÂN DÂN" />
+            </div>
+            <div class="form-group">
+              <label for="review-chuc-vu">Chức vụ người ký</label>
+              <input type="text" id="review-chuc-vu" placeholder="VD: CHỦ TỊCH" />
+            </div>
+            <div class="form-group">
+              <label for="review-ho-ten">Họ tên người ký</label>
+              <input type="text" id="review-ho-ten" placeholder="VD: Nguyễn Văn A" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-noi-nhan">Nơi nhận</label>
+            <textarea id="review-noi-nhan" rows="4"
+              placeholder="Mỗi dòng = 1 nơi nhận&#10;VD: Như Điều 2;&#10;UBND tỉnh (b/c);&#10;Lưu: VT."></textarea>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- ═══ VIEW: RESULT ═══ -->
+    <section id="view-result" class="view">
+      <div class="result-container">
+        <div class="result-success-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h2 class="result-title">Chuẩn hóa thành công!</h2>
+        <p id="result-subtitle" class="result-subtitle">File DOCX đã được tạo đúng thể thức</p>
+
+        <div id="result-details" class="result-details">
+          <div class="detail-row">
+            <span class="detail-label">Loại văn bản</span>
+            <span id="result-type" class="detail-value">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Cơ quan ban hành</span>
+            <span id="result-org" class="detail-value">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Số / Ký hiệu</span>
+            <span id="result-number" class="detail-value">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Trích yếu</span>
+            <span id="result-summary" class="detail-value">—</span>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button id="btn-download" class="btn-primary btn-download">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Tải file DOCX</span>
+          </button>
+          <button id="btn-new" class="btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            <span>Xử lý file khác</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ VIEW: GUIDE ═══ -->
+    <section id="view-guide" class="view">
+      <div class="view-header">
+        <h2>Hướng dẫn Thể thức</h2>
+        <p class="view-subtitle">So sánh NĐ30/2020 (Hành chính) và HD36/2018 (Đảng)</p>
+      </div>
+
+      <!-- Guide Tab Switcher -->
+      <div class="guide-tabs">
+        <button class="guide-tab active" data-guide="nd30" id="guide-tab-nd30">NĐ30 — Hành chính</button>
+        <button class="guide-tab" data-guide="hd36" id="guide-tab-hd36">HD36 — Văn bản Đảng</button>
+      </div>
+
+      <!-- ── Guide: ND30 ── -->
+      <div class="guide-content" id="guide-nd30">
+        <div class="guide-card">
+          <h3>1. Quy định chung — NĐ30</h3>
+          <div class="guide-table">
+            <div class="guide-row"><span>Khổ giấy</span><span>A4 (210 × 297 mm)</span></div>
+            <div class="guide-row"><span>Phông chữ</span><span>Times New Roman, Unicode</span></div>
+            <div class="guide-row"><span>Lề trên / dưới</span><span>20 mm</span></div>
+            <div class="guide-row"><span>Lề trái</span><span>30 mm</span></div>
+            <div class="guide-row"><span>Lề phải</span><span>20 mm</span></div>
+          </div>
+        </div>
+        <div class="guide-card">
+          <h3>2. Thành phần &amp; Cỡ chữ</h3>
+          <div class="guide-table guide-table-header">
+            <div class="guide-row header-row"><span>Thành phần</span><span>Kiểu chữ</span><span>Cỡ</span></div>
+            <div class="guide-row"><span>Quốc hiệu</span><span>IN HOA, Đậm</span><span>13</span></div>
+            <div class="guide-row"><span>Tiêu ngữ</span><span>Thường, Đậm</span><span>13</span></div>
+            <div class="guide-row"><span>Tên cơ quan</span><span>IN HOA, Đậm</span><span>13</span></div>
+            <div class="guide-row"><span>Số ký hiệu</span><span>Thường</span><span>13</span></div>
+            <div class="guide-row"><span>Địa danh, Ngày</span><span>Thường, Nghiêng</span><span>13</span></div>
+            <div class="guide-row"><span>Tên loại VB</span><span>IN HOA, Đậm</span><span>14</span></div>
+            <div class="guide-row"><span>Trích yếu</span><span>Thường, Đậm</span><span>14</span></div>
+            <div class="guide-row"><span>Nội dung</span><span>Thường</span><span>14</span></div>
+            <div class="guide-row"><span>Quyền hạn ký</span><span>IN HOA, Đậm</span><span>14</span></div>
+            <div class="guide-row"><span>Họ tên người ký</span><span>Thường, Đậm</span><span>14</span></div>
+            <div class="guide-row"><span>"Nơi nhận:"</span><span>Nghiêng, Đậm</span><span>12</span></div>
+            <div class="guide-row"><span>DS nơi nhận</span><span>Thường</span><span>11</span></div>
+          </div>
+        </div>
+        <div class="guide-card">
+          <h3>3. Đường kẻ ngang</h3>
+          <div class="guide-table">
+            <div class="guide-row"><span>Dưới Tiêu ngữ</span><span>Bằng độ dài dòng chữ</span></div>
+            <div class="guide-row"><span>Dưới Tên CQ ban hành</span><span>1/3 – 1/2 dòng chữ</span></div>
+            <div class="guide-row"><span>Dưới Trích yếu</span><span>1/3 – 1/2 dòng chữ</span></div>
+          </div>
+        </div>
+        <div class="guide-card">
+          <h3>4. Kỹ thuật soạn thảo</h3>
+          <div class="guide-table">
+            <div class="guide-row"><span>Thụt đầu dòng</span><span>1 – 1.27 cm</span></div>
+            <div class="guide-row"><span>Khoảng cách đoạn</span><span>Tối thiểu 6pt</span></div>
+            <div class="guide-row"><span>Căn lề nội dung</span><span>Justify (đều 2 bên)</span></div>
+            <div class="guide-row"><span>Giãn dòng</span><span>1.0 – 1.5 lines (~17pt)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Guide: HD36 ── -->
+      <div class="guide-content hidden" id="guide-hd36">
+        <div class="guide-card guide-card-dang">
+          <h3>1. Quy định chung — HD36</h3>
+          <div class="guide-table">
+            <div class="guide-row"><span>Khổ giấy</span><span>A4 (210 × 297 mm)</span></div>
+            <div class="guide-row"><span>Phông chữ</span><span>Times New Roman (TCVN 6909:2001)</span></div>
+            <div class="guide-row"><span>Lề trên / dưới</span><span>20 mm</span></div>
+            <div class="guide-row"><span>Lề trái</span><span>30 mm</span></div>
+            <div class="guide-row highlight-row"><span>Lề phải</span><span>15 mm (khác NĐ30: 20mm)</span></div>
+          </div>
+        </div>
+        <div class="guide-card guide-card-dang">
+          <h3>2. Thành phần &amp; Cỡ chữ</h3>
+          <div class="guide-table guide-table-header">
+            <div class="guide-row header-row"><span>Thành phần</span><span>Kiểu chữ</span><span>Cỡ</span></div>
+            <div class="guide-row highlight-row"><span>"ĐẢNG CỘNG SẢN VIỆT NAM"</span><span>IN HOA, Đậm</span><span>15</span></div>
+            <div class="guide-row"><span>Tên CQ cấp trên</span><span>IN HOA, Thường</span><span>14</span></div>
+            <div class="guide-row"><span>Tên CQ ban hành</span><span>IN HOA, Đậm</span><span>14</span></div>
+            <div class="guide-row highlight-row"><span>Dấu sao (*)</span><span>Căn giữa (thay gạch ngang)</span><span>14</span></div>
+            <div class="guide-row"><span>Số ký hiệu</span><span>Thường</span><span>14</span></div>
+            <div class="guide-row"><span>Địa danh, Ngày</span><span>Thường, Nghiêng</span><span>14</span></div>
+            <div class="guide-row"><span>Tên loại VB</span><span>IN HOA, Đậm</span><span>15–16</span></div>
+            <div class="guide-row"><span>Trích yếu (có tên loại)</span><span>Thường, Đậm</span><span>14–15</span></div>
+            <div class="guide-row"><span>Trích yếu (công văn)</span><span>Thường, Nghiêng</span><span>12</span></div>
+            <div class="guide-row"><span>Nội dung</span><span>Thường</span><span>14–15</span></div>
+            <div class="guide-row highlight-row"><span>Quyền hạn ký (T/M, K/T, T/L)</span><span>IN HOA, Đậm</span><span>14</span></div>
+            <div class="guide-row"><span>Chức vụ người ký</span><span>IN HOA, Thường</span><span>14</span></div>
+            <div class="guide-row"><span>Họ tên người ký</span><span>Thường, Đậm</span><span>14</span></div>
+            <div class="guide-row highlight-row"><span>"Nơi nhận:"</span><span>Thường, Gạch chân</span><span>14</span></div>
+            <div class="guide-row"><span>DS nơi nhận</span><span>Thường</span><span>12</span></div>
+          </div>
+        </div>
+        <div class="guide-card guide-card-dang">
+          <h3>3. Điểm khác biệt với NĐ30</h3>
+          <div class="guide-table guide-table-header">
+            <div class="guide-row header-row"><span>Yếu tố</span><span>HD36 (Đảng)</span><span>NĐ30 (HC)</span></div>
+            <div class="guide-row"><span>Góc phải</span><span>ĐẢNG CỘNG SẢN VN</span><span>Quốc hiệu + Tiêu ngữ</span></div>
+            <div class="guide-row"><span>Dưới CQ ban hành</span><span>Dấu sao (*)</span><span>Gạch ngang 1/3</span></div>
+            <div class="guide-row"><span>Quyền hạn ký</span><span>T/M, K/T, T/L</span><span>TM., KT., TL.</span></div>
+            <div class="guide-row"><span>"Nơi nhận:"</span><span>Gạch chân</span><span>Đậm + Nghiêng</span></div>
+            <div class="guide-row"><span>Căn cứ</span><span>Chữ đứng, gạch đầu dòng</span><span>Chữ nghiêng</span></div>
+            <div class="guide-row"><span>Line spacing</span><span>≥ 18pt</span><span>~17pt</span></div>
+            <div class="guide-row"><span>Lề phải</span><span>15mm</span><span>20mm</span></div>
+            <div class="guide-row"><span>Số ký hiệu</span><span>Số 15-NQ/TU</span><span>Số: 15/QĐ-UBND</span></div>
+            <div class="guide-row"><span>Khoảng chữ ký</span><span>4 dòng trống</span><span>2–3 dòng trống</span></div>
+          </div>
+        </div>
+        <div class="guide-card guide-card-dang">
+          <h3>4. Kỹ thuật soạn thảo</h3>
+          <div class="guide-table">
+            <div class="guide-row"><span>Thụt đầu dòng</span><span>~10 mm (~567 twips)</span></div>
+            <div class="guide-row"><span>Khoảng cách đoạn</span><span>≥ 6pt</span></div>
+            <div class="guide-row"><span>Căn lề nội dung</span><span>Justify (đều 2 bên)</span></div>
+            <div class="guide-row highlight-row"><span>Giãn dòng</span><span>≥ 18pt (EXACT)</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ VIEW: ERROR ═══ -->
+    <section id="view-error" class="view">
+      <div class="error-container">
+        <div class="error-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </div>
+        <h2 class="error-title">Đã xảy ra lỗi</h2>
+        <p id="error-message" class="error-message">Không thể xử lý file. Vui lòng thử lại.</p>
+        <button id="btn-retry" class="btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          <span>Thử lại</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══ TOAST CONTAINER ═══ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ═══ MOBILE OVERLAY ═══ -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

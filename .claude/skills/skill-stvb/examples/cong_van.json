@@ -1,0 +1,23 @@
+{
+  "loai_van_ban": "cong_van",
+  "co_quan_chu_quan": "BO TAI CHINH",
+  "co_quan_ban_hanh": "CUC THUE TP. HA NOI",
+  "so_ky_hieu": "So: 123/CT-HNi",
+  "dia_danh": "Ha Noi",
+  "ngay_thang": ", ngay 17 thang 03 nam 2026",
+  "trich_yeu": "V/v huong dan ke khai thue TNCN nam 2026",
+  "kinh_gui": [
+    "Cac Chi cuc Thue khu vuc",
+    "Phong Thue thu nhap ca nhan"
+  ],
+  "noi_dung": "De dam bao cong tac huong dan ke khai thue TNCN thong nhat, de nghi cac don vi trien khai theo noi dung dinh kem.\nTrong qua trinh thuc hien neu co vuong mac, de nghi tong hop va gui ve CUC THUE TP. HA NOI de xu ly.",
+  "cap_ky": "KT",
+  "chuc_vu_cap_tren": "CUC TRUONG",
+  "chuc_vu_ky": "PHO CUC TRUONG",
+  "nguoi_ky": "Nguyen Van An",
+  "noi_nhan": [
+    "- Nhu tren;",
+    "- Cuc truong (de b/c);",
+    "- Luu: VT, TNCN."
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CV + Cover Letter + Email Bundle",
+  "description": "Schema gộp cho CV, Cover Letter và Email xin việc — xuất ra 1 file .docx",
+  "type": "object",
+  "required": ["cv", "cover_letter", "email"],
+  "properties": {
+    "cv": {
+      "type": "object",
+      "description": "Thông tin CV",
+      "required": ["ho_ten", "email", "sdt", "muc_tieu", "kinh_nghiem", "hoc_van", "ky_nang"],
+      "properties": {
+        "ho_ten": {
+          "type": "string",
+          "description": "Họ tên (in hoa bold trong CV)"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email chuyên nghiệp (không nickname)"
+        },
+        "sdt": {
+          "type": "string",
+          "description": "Số điện thoại (đầy đủ mã quốc gia)"
+        },
+        "dia_chi": {
+          "type": "string",
+          "description": "Địa chỉ (chỉ ghi thành phố)"
+        },
+        "linkedin": {
+          "type": "string",
+          "description": "LinkedIn URL (nếu có)"
+        },
+        "portfolio": {
+          "type": "string",
+          "description": "Portfolio URL (nếu có)"
+        },
+        "muc_tieu": {
+          "type": "object",
+          "description": "Mục tiêu nghề nghiệp",
+          "required": ["ngan_han", "dai_han"],
+          "properties": {
+            "ngan_han": {
+              "type": "string",
+              "description": "Mục tiêu ngắn hạn (1-3 năm), nhấn mạnh đóng góp cho công ty"
+            },
+            "dai_han": {
+              "type": "string",
+              "description": "Mục tiêu dài hạn (3-5 năm)"
+            }
+          }
+        },
+        "kinh_nghiem": {
+          "type": "array",
+          "description": "Kinh nghiệm làm việc (thứ tự thời gian ngược)",
+          "items": {
+            "type": "object",
+            "required": ["cong_ty", "vi_tri", "thoi_gian", "mo_ta"],
+            "properties": {
+              "cong_ty": { "type": "string" },
+              "vi_tri": { "type": "string" },
+              "thoi_gian": { "type": "string", "description": "VD: '01/2023 - nay'" },
+              "mo_ta": {
+                "type": "array",
+                "description": "Mô tả trách nhiệm + thành tích (lượng hóa)",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "hoc_van": {
+          "type": "array",
+          "description": "Học vấn (thứ tự thời gian ngược)",
+          "items": {
+            "type": "object",
+            "required": ["truong", "nganh", "thoi_gian"],
+            "properties": {
+              "truong": { "type": "string" },
+              "nganh": { "type": "string" },
+              "thoi_gian": { "type": "string" },
+              "gpa": { "type": "string" },
+              "hoc_bong": { "type": "string" },
+              "khoa_hoc_lien_quan": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "chung_chi": {
+          "type": "array",
+          "description": "Chứng chỉ và khóa học",
+          "items": { "type": "string" }
+        },
+        "ky_nang": {
+          "type": "object",
+          "description": "Kỹ năng",
+          "properties": {
+            "chuyen_mon": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "mem": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "cong_cu": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "du_an": {
+          "type": "array",
+          "description": "Dự án tham gia",
+          "items": {
+            "type": "object",
+            "required": ["ten", "mo_ta"],
+            "properties": {
+              "ten": { "type": "string" },
+              "thoi_gian": { "type": "string" },
+              "vai_tro": { "type": "string" },
+              "mo_ta": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "hoat_dong_ngoai_khoa": {
+          "type": "array",
+          "description": "Hoạt động ngoại khóa",
+          "items": {
+            "type": "object",
+            "required": ["ten", "vai_tro", "thoi_gian"],
+            "properties": {
+              "ten": { "type": "string" },
+              "vai_tro": { "type": "string" },
+              "thoi_gian": { "type": "string" },
+              "mo_ta": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "so_thich": {
+          "type": "array",
+          "description": "Sở thích (chỉ ghi nếu liên quan)",
+          "items": { "type": "string" }
+        },
+        "nguoi_tham_chieu": {
+          "type": "array",
+          "description": "Người tham chiếu",
+          "items": {
+            "type": "object",
+            "required": ["ho_ten", "chuc_vu", "cong_ty", "sdt", "email"],
+            "properties": {
+              "ho_ten": { "type": "string" },
+              "chuc_vu": { "type": "string" },
+              "cong_ty": { "type": "string" },
+              "sdt": { "type": "string" },
+              "email": { "type": "string" },
+              "moi_quan_he": { "type": "string", "description": "VD: 'Quản lý trực tiếp từ 06/2021'" }
+            }
+          }
+        }
+      }
+    },
+    "cover_letter": {
+      "type": "object",
+      "description": "Thông tin Cover Letter",
+      "required": ["nguoi_nhan", "vi_tri_ung_tuyen", "ly_do", "ky_nang_phu_hop", "dong_gop"],
+      "properties": {
+        "nguoi_nhan": {
+          "type": "object",
+          "description": "Thông tin người nhận",
+          "properties": {
+            "ten": { "type": "string", "description": "Tên công ty/phòng ban" },
+            "dia_chi": { "type": "string" }
+          }
+        },
+        "vi_tri_ung_tuyen": {
+          "type": "string",
+          "description": "Vị trí ứng tuyển"
+        },
+        "ly_do": {
+          "type": "string",
+          "description": "Lý do ứng tuyển (1-2 câu)"
+        },
+        "kinh_nghiem_lien_quan": {
+          "type": "string",
+          "description": "Kinh nghiệm liên quan đến vị trí"
+        },
+        "ky_nang_phu_hop": {
+          "type": "string",
+          "description": "Kỹ năng phù hợp với yêu cầu"
+        },
+        "diem_manh": {
+          "type": "string",
+          "description": "Điểm mạnh lớn nhất"
+        },
+        "cai_thien": {
+          "type": "string",
+          "description": "Kế hoạch cải thiện điểm yếu (nếu có)"
+        },
+        "dong_gop": {
+          "type": "array",
+          "description": "Đóng góp dự kiến cho công ty (QUAN TRỌNG)",
+          "items": { "type": "string" }
+        },
+        "ket_luan": {
+          "type": "string",
+          "description": "Cảm ơn + kêu gọi hành động"
+        }
+      }
+    },
+    "email": {
+      "type": "object",
+      "description": "Thông tin Email xin việc",
+      "required": ["chu_de", "nguoi_nhan", "noi_dung"],
+      "properties": {
+        "chu_de": {
+          "type": "string",
+          "description": "Dòng chủ đề: 'Họ tên - Vị trí - Công ty - Ngày'"
+        },
+        "nguoi_nhan": {
+          "type": "object",
+          "properties": {
+            "ten": { "type": "string" },
+            "email": { "type": "string", "format": "email" }
+          }
+        },
+        "loi_chao": {
+          "type": "string",
+          "description": "Lời chào mở đầu"
+        },
+        "gioi_thieu": {
+          "type": "string",
+          "description": "Phần 1: Giới thiệu (1-2 câu)"
+        },
+        "ly_do_ky_nang": {
+          "type": "string",
+          "description": "Phần 2: Lý do + kỹ năng (2-3 câu)"
+        },
+        "ket_luan_dong_gop": {
+          "type": "string",
+          "description": "Phần 3: Kết luận + nhấn mạnh đóng góp (1-2 câu)"
+        },
+        "loi_ket": {
+          "type": "string",
+          "description": "Lời kết: 'Trân trọng,' / 'Trân trọng cảm ơn,'"
+        },
+        "file_dinh_kem": {
+          "type": "array",
+          "description": "Danh sách file đính kèm",
+          "items": { "type": "string" }
+        },
+        "chu_ky": {
+          "type": "object",
+          "description": "Chữ ký email",
+          "properties": {
+            "ho_ten": { "type": "string" },
+            "vi_tri": { "type": "string" },
+            "email": { "type": "string" },
+            "sdt": { "type": "string" },
+            "linkedin": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

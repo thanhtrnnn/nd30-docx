@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+.vercel
+
+# Logs
+*.log
+
+# Output files (generated)
+output/*.docx
+output/*.pdf
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Zip archives
+*.zip

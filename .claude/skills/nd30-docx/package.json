@@ -1,0 +1,16 @@
+{
+  "name": "nd30-docx",
+  "version": "1.0.0",
+  "description": "Tạo và kiểm tra văn bản hành chính theo NĐ30/2020/NĐ-CP",
+  "scripts": {
+    "generate:cong-van": "node scripts/generate_cong_van.js",
+    "generate:quyet-dinh": "node scripts/generate_quyet_dinh.js",
+    "generate:to-trinh": "node scripts/generate_to_trinh.js",
+    "generate:thong-bao": "node scripts/generate_thong_bao.js",
+    "generate:ke-hoach": "node scripts/generate_ke_hoach.js",
+    "check": "python scripts/check_nd30.py --check"
+  },
+  "dependencies": {
+    "docx": "^8.5.0"
+  }
+}

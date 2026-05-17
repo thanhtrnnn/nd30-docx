@@ -1,0 +1,14 @@
+{
+  "name": "skill-the-thuc-vb-nd30",
+  "version": "1.0.0",
+  "description": "Sinh van ban hanh chinh chuan ND30 bang Node.js + docx",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "gen:cv": "node scripts/generate_cong_van.js",
+    "gen:qd": "node scripts/generate_quyet_dinh.js"
+  },
+  "dependencies": {
+    "docx": "^9.1.1"
+  }
+}

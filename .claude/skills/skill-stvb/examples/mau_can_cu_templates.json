@@ -1,0 +1,46 @@
+{
+  "can_bo": {
+    "can_cu": [
+      "Can cu Luat To chuc chinh quyen dia phuong ...",
+      "Can cu Luat Can bo, cong chuc ...",
+      "Can cu Nghi dinh 30/2020/ND-CP ngay 05/3/2020 cua Chinh phu ve cong tac van thu",
+      "Can cu Quyet dinh/Ke hoach cua UBND tinh ve cong tac can bo ..."
+    ],
+    "ghi_chu_tra_cuu": [
+      "Nguon: ... ; ngay tra cuu: ... ; tinh trang: ..."
+    ]
+  },
+  "chuyen_doi_so": {
+    "can_cu": [
+      "Can cu Luat Chuyen doi so ...",
+      "Can cu Nghi dinh 30/2020/ND-CP ...",
+      "Can cu Ke hoach chuyen doi so cua UBND tinh ...",
+      "Can cu van ban chi dao ve chinh quyen dia phuong 2 cap ..."
+    ],
+    "ghi_chu_tra_cuu": [
+      "Nguon: ... ; ngay tra cuu: ... ; tinh trang: ..."
+    ]
+  },
+  "tai_chinh": {
+    "can_cu": [
+      "Can cu Luat Ngan sach nha nuoc ...",
+      "Can cu Nghi dinh/Thong tu huong dan thi hanh ...",
+      "Can cu Nghi dinh 30/2020/ND-CP ...",
+      "Can cu Nghi quyet HDND/Quyet dinh UBND ve du toan, phan bo ngan sach ..."
+    ],
+    "ghi_chu_tra_cuu": [
+      "Nguon: ... ; ngay tra cuu: ... ; tinh trang: ..."
+    ]
+  },
+  "dat_dai": {
+    "can_cu": [
+      "Can cu Luat Dat dai ...",
+      "Can cu Nghi dinh/Thong tu huong dan Luat Dat dai ...",
+      "Can cu Nghi dinh 30/2020/ND-CP ...",
+      "Can cu Quyet dinh UBND tinh ve quy che pho hop dat dai voi cap xa ..."
+    ],
+    "ghi_chu_tra_cuu": [
+      "Nguon: ... ; ngay tra cuu: ... ; tinh trang: ..."
+    ]
+  }
+}

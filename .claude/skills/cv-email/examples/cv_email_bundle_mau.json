@@ -1,0 +1,154 @@
+{
+  "cv": {
+    "ho_ten": "NGUYỄN VĂN A",
+    "email": "nguyenvana@gmail.com",
+    "sdt": "0912 345 678",
+    "dia_chi": "Hà Nội",
+    "linkedin": "linkedin.com/in/nguyenvana",
+    "muc_tieu": {
+      "ngan_han": "Với 2 năm kinh nghiệm trong lĩnh vực marketing digital và kỹ năng phân tích dữ liệu, tôi mong muốn ứng dụng khả năng sáng tạo và tư duy chiến lược để phát triển các chiến dịch marketing hiệu quả tại Công ty ABC, đóng góp vào mục tiêu tăng trưởng thương hiệu và doanh số của công ty.",
+      "dai_han": "Trong 5 năm tới, tôi muốn trở thành Trưởng phòng Marketing tại một công ty công nghệ lớn, dẫn dắt đội ngũ xây dựng chiến lược marketing tổng thể và đóng góp vào sự phát triển bền vững của doanh nghiệp."
+    },
+    "kinh_nghiem": [
+      {
+        "cong_ty": "Công ty DEF Digital",
+        "vi_tri": "Chuyên viên Marketing",
+        "thoi_gian": "06/2024 - nay",
+        "mo_ta": [
+          "Quản lý và triển khai các chiến dịch marketing online, tăng tương tác khách hàng 30%",
+          "Phân tích dữ liệu chiến dịch, đề xuất tối ưu hóa, giảm 20% chi phí quảng cáo",
+          "Phối hợp với đội ngũ kinh doanh để xây dựng content marketing cho sản phẩm mới"
+        ]
+      },
+      {
+        "cong_ty": "Công ty ABC Media",
+        "vi_tri": "Thực tập sinh Marketing",
+        "thoi_gian": "01/2024 - 05/2024",
+        "mo_ta": [
+          "Hỗ trợ viết nội dung cho fanpage, tăng lượng người theo dõi 15%",
+          "Chạy quảng cáo Facebook, theo dõi hiệu quả chiến dịch",
+          "Tham gia tổ chức sự kiện ra mắt sản phẩm"
+        ]
+      }
+    ],
+    "hoc_van": [
+      {
+        "truong": "Đại học Kinh tế Quốc dân",
+        "nganh": "Cử nhân Marketing",
+        "thoi_gian": "2020 - 2024",
+        "gpa": "3.6/4.0",
+        "hoc_bong": "Học bổng Doanh nghiệp xuất sắc năm 2022",
+        "khoa_hoc_lien_quan": [
+          "Chiến lược marketing",
+          "Phân tích thị trường",
+          "Digital Marketing"
+        ]
+      }
+    ],
+    "chung_chi": [
+      "Chứng chỉ Google Analytics",
+      "Chứng chỉ Facebook Blueprint",
+      "Chứng chỉ Tiếng Anh TOEIC: 850/990"
+    ],
+    "ky_nang": {
+      "chuyen_mon": [
+        "Quản lý chiến dịch marketing online (Facebook Ads, Google Ads)",
+        "Phân tích dữ liệu thị trường và hành vi khách hàng",
+        "Xây dựng chiến lược content marketing",
+        "SEO/SEM"
+      ],
+      "mem": [
+        "Kỹ năng giao tiếp và thuyết trình",
+        "Làm việc nhóm và phối hợp liên phòng ban",
+        "Tư duy sáng tạo và giải quyết vấn đề",
+        "Quản lý thời gian và đa nhiệm"
+      ],
+      "cong_cu": [
+        "Thành thạo Microsoft Office (Word, Excel, PowerPoint)",
+        "Google Analytics, Facebook Business Manager",
+        "Canva, Adobe Photoshop cơ bản",
+        "Trello, Asana"
+      ]
+    },
+    "du_an": [
+      {
+        "ten": "Chiến dịch marketing ra mắt sản phẩm mới",
+        "thoi_gian": "03/2024 - 05/2024",
+        "vai_tro": "Trưởng nhóm marketing",
+        "mo_ta": [
+          "Xây dựng chiến lược marketing tổng thể cho sản phẩm mới",
+          "Quản lý ngân sách quảng cáo 50 triệu đồng",
+          "Đạt 150% chỉ tiêu tiếp cận khách hàng mục tiêu"
+        ]
+      }
+    ],
+    "hoat_dong_ngoai_khoa": [
+      {
+        "ten": "Câu lạc bộ Marketing, Đại học Kinh tế Quốc dân",
+        "vai_tro": "Phó Chủ tịch",
+        "thoi_gian": "09/2022 - 06/2024",
+        "mo_ta": [
+          "Tổ chức các buổi hội thảo về marketing cho sinh viên",
+          "Quản lý đội ngũ 15 thành viên",
+          "Phát triển kỹ năng lãnh đạo và tổ chức sự kiện"
+        ]
+      }
+    ],
+    "so_thich": [
+      "Đọc sách về marketing và kinh doanh",
+      "Chạy bộ: Rèn luyện sức khỏe và tinh thần kỷ luật"
+    ],
+    "nguoi_tham_chieu": [
+      {
+        "ho_ten": "Trần Thị B",
+        "chuc_vu": "Giám đốc Marketing",
+        "cong_ty": "Công ty DEF Digital",
+        "sdt": "0987 654 321",
+        "email": "tranb@defdigital.com",
+        "moi_quan_he": "Quản lý trực tiếp từ 06/2024"
+      }
+    ]
+  },
+  "cover_letter": {
+    "nguoi_nhan": {
+      "ten": "Phòng Nhân sự Công ty ABC",
+      "dia_chi": "123 Đường XYZ, Quận 1, TP. Hồ Chí Minh"
+    },
+    "vi_tri_ung_tuyen": "Nhân viên Marketing",
+    "ly_do": "Qua tìm hiểu, tôi nhận thấy Công ty ABC đang có những bước phát triển ấn tượng trong lĩnh vực công nghệ, và tôi rất mong muốn được đóng góp vào sự phát triển đó.",
+    "kinh_nghiem_lien_quan": "Trong 2 năm qua, tôi đã làm việc tại Công ty DEF Digital với vai trò Chuyên viên Marketing, nơi tôi quản lý và triển khai các chiến dịch marketing online, tăng tương tác khách hàng 30% và giảm 20% chi phí quảng cáo.",
+    "ky_nang_phu_hop": "Kỹ năng phân tích dữ liệu, tư duy chiến lược và khả năng sáng tạo trong xây dựng content marketing là những điểm mạnh lớn nhất của tôi, giúp tôi hoàn thành tốt vai trò được giao.",
+    "diem_manh": "Khả năng phân tích dữ liệu thị trường và hành vi khách hàng, từ đó đề xuất chiến lược marketing hiệu quả.",
+    "cai_thien": "Tôi nhận thấy bản thân cần cải thiện hơn nữa về kỹ năng quản lý đội ngũ. Vì vậy, tôi đã và đang tham gia khóa học về quản lý dự án và lãnh đạo nhóm.",
+    "dong_gop": [
+      "Áp dụng kinh nghiệm quản lý chiến dịch marketing online để phát triển thương hiệu Công ty ABC",
+      "Sử dụng kỹ năng phân tích dữ liệu để tối ưu hóa ngân sách quảng cáo và tăng ROI",
+      "Đóng góp vào mục tiêu tăng trưởng doanh số 30% của công ty trong năm 2026",
+      "Xây dựng chiến lược content marketing sáng tạo, thu hút khách hàng mục tiêu"
+    ],
+    "ket_luan": "Tôi rất mong có cơ hội được trao đổi thêm với Quý công ty về khả năng đóng góp của mình qua buổi phỏng vấn. Tôi xin chân thành cảm ơn Quý công ty đã dành thời gian xem xét hồ sơ của tôi."
+  },
+  "email": {
+    "chu_de": "Nguyễn Văn A - Nhân viên Marketing - Công ty ABC - 17/05/2026",
+    "nguoi_nhan": {
+      "ten": "Phòng Nhân sự Công ty ABC",
+      "email": "hr@abc.com.vn"
+    },
+    "loi_chao": "Kính gửi Quý Công ty ABC,",
+    "gioi_thieu": "Tôi là Nguyễn Văn A, hiện đang làm Chuyên viên Marketing tại Công ty DEF Digital. Tôi viết email này để bày tỏ mong muốn được ứng tuyển vào vị trí Nhân viên Marketing tại Công ty ABC.",
+    "ly_do_ky_nang": "Với 2 năm kinh nghiệm trong lĩnh vực marketing digital và kỹ năng phân tích dữ liệu, tôi tin rằng mình phù hợp với yêu cầu của vị trí này. Trong công việc hiện tại, tôi đã quản lý thành công các chiến dịch marketing online, tăng tương tác khách hàng 30%.",
+    "ket_luan_dong_gop": "Tôi tin rằng mình có thể đóng góp vào mục tiêu tăng trưởng thương hiệu của Công ty ABC thông qua các chiến lược marketing sáng tạo và kinh nghiệm phân tích dữ liệu. Rất mong có cơ hội được trao đổi thêm tại buổi phỏng vấn.",
+    "loi_ket": "Trân trọng cảm ơn,",
+    "file_dinh_kem": [
+      "CV - Nguyen Van A - Nhan vien Marketing.pdf",
+      "Cover Letter - Nguyen Van A - Nhan vien Marketing.pdf"
+    ],
+    "chu_ky": {
+      "ho_ten": "Nguyễn Văn A",
+      "vi_tri": "Chuyên viên Marketing",
+      "email": "nguyenvana@gmail.com",
+      "sdt": "0912 345 678",
+      "linkedin": "linkedin.com/in/nguyenvana"
+    }
+  }
+}
