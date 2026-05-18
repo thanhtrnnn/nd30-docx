@@ -138,6 +138,86 @@ def check_docx(filepath):
             else:
                 results['warnings'].append("Recipients (Nơi nhận): not found")
 
+            # --- H. Check "Kính gửi" formatting ---
+            for para in root.findall('.//w:p', NS):
+                t = extract_text(para)
+                if 'Kính gửi' in t or 'kính gửi' in t:
+                    # Check italic
+                    is_italic = False
+                    for rPr in para.findall('.//w:rPr', NS):
+                        i_elem = rPr.find('w:i', NS)
+                        if i_elem is not None:
+                            val = i_elem.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val', 'true')
+                            if val.lower() not in ('false', '0'):
+                                is_italic = True
+                    if is_italic:
+                        results['errors'].append("Kính gửi: italic (NĐ30 requires 'đứng' = not italic)")
+                    else:
+                        results['passed'].append("Kính gửi: not italic (correct)")
+
+                    # Check first-line indent
+                    pPr = para.find('w:pPr', NS)
+                    has_indent = False
+                    if pPr is not None:
+                        ind = pPr.find('w:ind', NS)
+                        if ind is not None:
+                            fl = ind.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}firstLine', '0')
+                            if int(fl) >= 500:
+                                has_indent = True
+                    if has_indent:
+                        results['passed'].append("Kính gửi: first-line indent ≥ 500 DXA")
+                    else:
+                        results['warnings'].append("Kính gửi: no first-line indent (expected ~567 DXA / 1cm)")
+                    break
+
+            # --- I. Check separator lines (underscore characters) ---
+            for para in root.findall('.//w:p', NS):
+                t = extract_text(para).strip()
+                if t and all(c == '_' for c in t) and 10 <= len(t) <= 35:
+                    results['passed'].append(f"Separator line: underscore chars ({len(t)} chars)")
+                    break
+            else:
+                results['warnings'].append("Separator line: no underscore separator found")
+
+            # --- J. Check line spacing ---
+            spacing_issues = []
+            for para in root.findall('.//w:p', NS):
+                t = extract_text(para).strip()
+                if not t or len(t) < 5:
+                    continue
+                pPr = para.find('w:pPr', NS)
+                if pPr is not None:
+                    sp = pPr.find('w:spacing', NS)
+                    if sp is not None:
+                        line = sp.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}line', '')
+                        rule = sp.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}lineRule', '')
+                        if line and rule == 'exact':
+                            line_val = int(line)
+                            if line_val > 360:
+                                spacing_issues.append(f"Line spacing {line_val} DXA > 360 (1.5 lines)")
+            if not spacing_issues:
+                results['passed'].append("Line spacing: within spec (single to 1.5 lines)")
+            else:
+                results['warnings'].append(f"Line spacing: {len(spacing_issues)} paragraph(s) exceed 1.5 lines")
+
+            # --- K. Check "Nơi nhận" label formatting ---
+            for para in root.findall('.//w:p', NS):
+                t = extract_text(para).strip()
+                if t.startswith('Nơi nhận'):
+                    # Check italic + bold
+                    is_italic = False
+                    is_bold = False
+                    for rPr in para.findall('.//w:rPr', NS):
+                        if rPr.find('w:i', NS) is not None:
+                            is_italic = True
+                        if rPr.find('w:b', NS) is not None:
+                            is_bold = True
+                    if is_italic and is_bold:
+                        results['passed'].append("Nơi nhận label: italic + bold (correct)")
+                    else:
+                        results['warnings'].append(f"Nơi nhận label: italic={is_italic}, bold={is_bold} (expected both)")
+                    break
+
     except zipfile.BadZipFile:
         results['errors'].append(f"Not a valid .docx file: {filepath}")
     except Exception as e:

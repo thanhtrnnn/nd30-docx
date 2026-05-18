@@ -204,9 +204,9 @@ def add_header_block(doc, co_quan_chu_quan, co_quan_ban_hanh,
     run = p_line.add_run("_" * line_len)
     set_font(run, size=10)
 
-    # Ô 3: Số ký hiệu
+    # Ô 3: Số ký hiệu — sát với đường kẻ ngăn cách
     p_so = cell_left.add_paragraph()
-    set_paragraph_format(p_so, WD_ALIGN_PARAGRAPH.CENTER, space_before=6, space_after=0)
+    set_paragraph_format(p_so, WD_ALIGN_PARAGRAPH.CENTER, space_before=0, space_after=0)
     run = p_so.add_run("Số: ")
     set_font(run, size=SIZE_SO_KYHIEU, bold=False)
     run = p_so.add_run(f"{so}/{ky_hieu}")
@@ -215,7 +215,7 @@ def add_header_block(doc, co_quan_chu_quan, co_quan_ban_hanh,
     # Ô 5b: Trích yếu V/v (chỉ cho Công văn)
     if trich_yeu_cv:
         p_vv = cell_left.add_paragraph()
-        set_paragraph_format(p_vv, WD_ALIGN_PARAGRAPH.CENTER, space_before=6, space_after=0)
+        set_paragraph_format(p_vv, WD_ALIGN_PARAGRAPH.CENTER, space_before=0, space_after=0)
         run = p_vv.add_run(f"V/v {trich_yeu_cv}")
         set_font(run, size=SIZE_TRICH_YEU_CV, bold=False)
 
@@ -239,9 +239,9 @@ def add_header_block(doc, co_quan_chu_quan, co_quan_ban_hanh,
     run = p_line.add_run("_" * 30)
     set_font(run, size=10)
 
-    # Ô 4: Địa danh + Ngày tháng năm (NGHIÊNG)
+    # Ô 4: Địa danh + Ngày tháng năm (NGHIÊNG) — sát với đường kẻ ngăn cách
     p_dd = cell_right.add_paragraph()
-    set_paragraph_format(p_dd, WD_ALIGN_PARAGRAPH.CENTER, space_before=6, space_after=0)
+    set_paragraph_format(p_dd, WD_ALIGN_PARAGRAPH.CENTER, space_before=0, space_after=0)
     # Đảm bảo ngày/tháng < 10 có số 0
     ngay_str = str(ngay).zfill(2)
     thang_str = str(thang).zfill(2)
@@ -293,7 +293,7 @@ def add_kinh_gui_block(doc, kinh_gui_list):
         return
 
     p = doc.add_paragraph()
-    set_paragraph_format(p, WD_ALIGN_PARAGRAPH.LEFT, space_before=12, space_after=6,
+    set_paragraph_format(p, WD_ALIGN_PARAGRAPH.LEFT, space_before=12, space_after=3,
                          first_line_indent=1.0)
 
     if len(kinh_gui_list) == 1:
