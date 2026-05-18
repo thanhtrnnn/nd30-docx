@@ -1,183 +1,131 @@
 #!/usr/bin/env python3
-"""Tạo thư ứng tuyển (cover letter) + email cho Phạm Tuấn Anh"""
+"""Create cover letter + email for VinAI application."""
 from docx import Document
 from docx.shared import Pt, Mm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
 
-def create_cover_letter_email(output_path):
-    doc = Document()
-
-    # Thiết lập lề trang
-    for section in doc.sections:
-        section.top_margin = Mm(20)
-        section.bottom_margin = Mm(20)
-        section.left_margin = Mm(30)
-        section.right_margin = Mm(20)
-
-    # Font mặc định
-    style = doc.styles['Normal']
-    font = style.font
-    font.name = 'Times New Roman'
-    font.size = Pt(13)
-
-    # ==================== COVER LETTER ====================
-    # Tiêu đề
-    title = doc.add_paragraph()
-    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = title.add_run('THƯ ỨNG TUYỂN')
-    run.bold = True
-    run.font.size = Pt(14)
+def set_font(run, size=14, bold=False, italic=False):
     run.font.name = 'Times New Roman'
+    run.font.size = Pt(size)
+    run.bold = bold
+    run.italic = italic
+    r = run._element
+    rPr = r.find(qn('w:rPr'))
+    if rPr is None:
+        rPr = OxmlElement('w:rPr')
+        r.insert(0, rPr)
+    rFonts = rPr.find(qn('w:rFonts'))
+    if rFonts is None:
+        rFonts = OxmlElement('w:rFonts')
+        rPr.insert(0, rFonts)
+    rFonts.set(qn('w:ascii'), 'Times New Roman')
+    rFonts.set(qn('w:hAnsi'), 'Times New Roman')
 
-    # Thông tin người gửi
-    sender = doc.add_paragraph()
-    sender.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    sender.add_run('Phạm Tuấn Anh').bold = True
-    sender.add_run('\nEmail: phamtuananhai@gmail.com')
-    sender.add_run('\nSĐT: 0912 345 678')
-    sender.add_run('\nGitHub: github.com/phamtuananhai')
+def add_para(doc, text, size=14, bold=False, italic=False,
+             alignment=WD_ALIGN_PARAGRAPH.LEFT, space_after=6):
+    p = doc.add_paragraph()
+    p.alignment = alignment
+    p.paragraph_format.space_after = Pt(space_after)
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.line_spacing = 1.15
+    run = p.add_run(text)
+    set_font(run, size, bold, italic)
+    return p
 
-    # Thông tin người nhận
-    receiver = doc.add_paragraph()
-    receiver.add_run('Phòng Nhân sự')
-    receiver.add_run('\nCông ty FPT Smart Cloud')
-    receiver.add_run('\nFPT Tower, Phạm Văn Bạch, Cầu Giấy, Hà Nội')
-
-    # Ngày
-    date_para = doc.add_paragraph()
-    date_para.add_run('Hà Nội, ngày 17 tháng 05 năm 2026')
-
-    # Tiêu đề thư
-    subject = doc.add_paragraph()
-    subject.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = subject.add_run('Ứng tuyển vị trí AI Engineer Intern')
-    run.bold = True
-    run.font.size = Pt(13)
-
-    # Lời chào
-    greeting = doc.add_paragraph()
-    greeting.add_run('Kính gửi Quý Công ty FPT Smart Cloud,')
-
-    # Mở đầu
-    intro = doc.add_paragraph()
-    intro.add_run(
-        'Tôi là Phạm Tuấn Anh, sinh viên năm thứ ba chuyên ngành Kỹ thuật Phần mềm '
-        'trường Đại học Công nghệ Viễn thông, Viện Đào tạo Tài năng PTIT. '
-        'Tôi viết thư này để bày tỏ mong muốn được ứng tuyển vào vị trí AI Engineer Intern '
-        'tại FPT Smart Cloud. Qua tìm hiểu, tôi nhận thấy công ty đang có những bước phát triển '
-        'ấn tượng trong lĩnh vực điện toán đám mây và trí tuệ nhân tạo, và tôi rất mong muốn '
-        'được đóng góp vào sự phát triển đó.'
-    )
-
-    # Thân thư - Kinh nghiệm + Kỹ năng
-    body1 = doc.add_paragraph()
-    body1.add_run(
-        'Trong quá trình học tập và nghiên cứu, tôi đã tích lũy được kinh nghiệm đáng kể '
-        'trong lĩnh vực Computer Vision và Natural Language Processing. Tôi hiện đang là '
-        'cộng tác viên nghiên cứu tại PTIT, tham gia các dự án về thị giác máy tính và robotics. '
-        'Tôi đã hoàn thành nhiều dự án thực tế, bao gồm: tinh chỉnh mô hình Vision Transformer (ViT) '
-        'cho bài toán phân loại ảnh y khoa với độ chính xác 88.58%; xây dựng pipeline nhận dạng giọng nói '
-        'cho ngôn ngữ ít tài nguyên (tiếng Việt phương ngữ), giảm 29% lỗi tương đối so với Whisper large-v2; '
-        'và phát triển mô hình LSTM ước tính dữ liệu cảm biến với RMSE 0.0166.'
-    )
-
-    body2 = doc.add_paragraph()
-    body2.add_run(
-        'Tôi thành thạo Python, C++ và các framework AI/ML phổ biến như PyTorch, Transformers, '
-        'Hugging Face, OpenCV. Bên cạnh đó, tôi có kinh nghiệm với các kỹ thuật tối ưu mô hình '
-        'như LoRA/Adapter fine-tuning và Retrieval-Augmented Generation (RAG). '
-        'Tôi cũng quen thuộc với các công cụ DevOps như FastAPI, Docker, Linux và Git.'
-    )
-
-    # Đóng góp dự kiến
-    contribution_title = doc.add_paragraph()
-    run = contribution_title.add_run('Đóng góp dự kiến:')
-    run.bold = True
-
-    contributions = [
-        'Phát triển và tối ưu các mô hình AI/ML cho sản phẩm cloud của FPT',
-        'Áp dụng kinh nghiệm Computer Vision và NLP vào các dự án thực tế của công ty',
-        'Đóng góp vào nghiên cứu và phát triển công nghệ AI tiên tiến',
-        'Hỗ trợ đội ngũ kỹ thuật trong việc triển khai và đánh giá mô hình'
-    ]
-    for c in contributions:
-        p = doc.add_paragraph(c, style='List Bullet')
-
-    # Kết thúc
-    closing = doc.add_paragraph()
-    closing.add_run(
-        'Tôi tin rằng sự nhiệt huyết, tinh thần cầu tiến và các kỹ năng chuyên môn '
-        'sẽ giúp tôi trở thành một thực tập sinh mang lại giá trị cho FPT Smart Cloud. '
-        'Tôi rất mong có cơ hội được trao đổi thêm với Quý công ty về khả năng đóng góp '
-        'của mình qua buổi phỏng vấn.'
-    )
-
-    thanks = doc.add_paragraph()
-    thanks.add_run('Tôi xin chân thành cảm ơn Quý công ty đã dành thời gian xem xét hồ sơ của tôi.')
-
-    # Ký tên
-    sign = doc.add_paragraph()
-    sign.add_run('Trân trọng,').bold = False
-    sign.add_run('\n').bold = False
-    sign.add_run('Phạm Tuấn Anh').bold = True
-
-    # ==================== PAGE BREAK ====================
+def add_page_break(doc):
     doc.add_page_break()
 
-    # ==================== EMAIL ====================
-    email_title = doc.add_paragraph()
-    email_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = email_title.add_run('NỘI DUNG EMAIL GỬI HỒ SƠ')
-    run.bold = True
-    run.font.size = Pt(14)
-    run.font.name = 'Times New Roman'
+doc = Document()
+s = doc.sections[0]
+s.page_width = Mm(210)
+s.page_height = Mm(297)
+s.top_margin = Mm(20)
+s.bottom_margin = Mm(20)
+s.left_margin = Mm(30)
+s.right_margin = Mm(15)
 
-    # Chủ đề
-    subject_email = doc.add_paragraph()
-    subject_email.add_run('Chủ đề: ').bold = True
-    subject_email.add_run('Phạm Tuấn Anh - AI Engineer Intern - FPT Smart Cloud')
+# ============================================================
+# COVER LETTER (page 1)
+# ============================================================
+add_para(doc, "PHẠM TUẤN ANH", size=16, bold=True, alignment=WD_ALIGN_PARAGRAPH.LEFT)
+add_para(doc, "Email: phamtuananh.ptit@gmail.com | ĐT: 0912 345 678", size=11, space_after=2)
+add_para(doc, "Địa chỉ: Hà Nội | LinkedIn: linkedin.com/in/phamtuananh", size=11, space_after=12)
 
-    # Người nhận
-    to = doc.add_paragraph()
-    to.add_run('Gửi: ').bold = True
-    to.add_run('Phòng Nhân sự FPT Smart Cloud (hr@fptsmartcloud.com)')
+add_para(doc, "Ngày 18 tháng 05 năm 2026", size=12, italic=True, space_after=12)
 
-    # Nội dung email
-    email_body = doc.add_paragraph()
-    email_body.add_run('Kính gửi Quý Công ty FPT Smart Cloud,\n\n')
+add_para(doc, "Kính gửi: Phòng Tuyển dụng Nhân sự VinAI", size=13, bold=True, space_after=6)
+add_para(doc, "Tôi viết thư này để ứng tuyển vị trí AI Engineer Intern tại VinAI. Với nền tảng kiến thức về trí tuệ nhân tạo, học sâu và xử lý ngôn ngữ tự nhiên, tôi mong muốn được đóng góp vào các nghiên cứu và sản phẩm AI tiên tiến của VinAI, đặc biệt trong lĩnh vực AI tiếng Việt và multi-modal AI.", size=13, space_after=6)
 
-    email_body.add_run(
-        'Tôi là Phạm Tuấn Anh, sinh viên năm thứ ba chuyên ngành Kỹ thuật Phần mềm '
-        'trường Đại học Công nghệ Viễn thông. Tôi viết email này để ứng tuyển vào vị trí '
-        'AI Engineer Intern tại FPT Smart Cloud.\n\n'
-    )
+add_para(doc, "Trong quá trình học tập tại Học viện Công nghệ Bưu chính Viễn thông, tôi đã tích lũy được các kỹ năng chuyên môn:", size=13, space_after=4)
 
-    email_body.add_run(
-        'Với kinh nghiệm nghiên cứu trong lĩnh vực Computer Vision và NLP, cùng với kỹ năng '
-        'Python, PyTorch, Transformers, tôi tin rằng mình phù hợp với yêu cầu của vị trí này. '
-        'Tôi đã hoàn thành nhiều dự án thực tế, bao gồm tinh chỉnh mô hình ViT cho phân loại ảnh y khoa '
-        'và xây dựng pipeline nhận dạng giọng nói cho ngôn ngữ ít tài nguyên.\n\n'
-    )
+skills = [
+    "PyTorch, Transformers, Hugging Face — xây dựng và fine-tuning mô hình AI",
+    "Vision Transformer (ViT) fine-tuning cho phân loại hình ảnh",
+    "Mô hình nhận dạng giọng nói (speech recognition) sử dụng LSTM",
+    "Xử lý ngôn ngữ tự nhiên (NLP): tokenization, text classification, sentiment analysis",
+    "Python, Git, Docker, Linux — công cụ phát triển và triển khai mô hình",
+]
+for skill in skills:
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.left_indent = Mm(1)
+    run = p.add_run(f"• {skill}")
+    set_font(run, 13)
 
-    email_body.add_run(
-        'Tôi tin rằng mình có thể đóng góp vào mục tiêu phát triển sản phẩm AI cloud '
-        'của FPT Smart Cloud thông qua các kỹ năng chuyên môn và tinh thần học hỏi. '
-        'Rất mong có cơ hội được trao đổi thêm tại buổi phỏng vấn.\n\n'
-    )
+add_para(doc, "Đóng góp dự kiến:", size=13, bold=True, space_after=4)
+contribs = [
+    "Phát triển và tối ưu các mô hình AI tiếng Việt, hỗ trợ VinAI trong nghiên cứu ngôn ngữ tự nhiên",
+    "Đóng góp vào pipeline ML: data preprocessing, model training, evaluation, deployment",
+    "Nghiên cứu và triển khai các kỹ thuật mới trong multi-modal AI (text-image-speech)",
+    "Hỗ trợ đội ngũ kỹ sư trong việc benchmark và đánh giá hiệu suất mô hình",
+]
+for c in contribs:
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.left_indent = Mm(1)
+    run = p.add_run(f"• {c}")
+    set_font(run, 13)
 
-    email_body.add_run('Trân trọng cảm ơn,\n')
-    email_body.add_run('Phạm Tuấn Anh').bold = True
-    email_body.add_run('\nEmail: phamtuananhai@gmail.com')
-    email_body.add_run('\nSĐT: 0912 345 678')
+add_para(doc, "Tôi tin rằng sự kết hợp giữa kiến thức chuyên môn về AI/ML và tinh thần học hỏi sẽ giúp tôi đóng góp tích cực vào các dự án của VinAI. Tôi rất mong có cơ hội được trao đổi thêm trong buổi phỏng vấn.", size=13, space_after=12)
 
-    # File đính kèm
-    attachment = doc.add_paragraph()
-    attachment.add_run('\nFile đính kèm:').bold = True
-    attachment.add_run('\n1. CV_PhamTuanAnh_AIEngineerIntern.pdf')
-    attachment.add_run('\n2. ThuUngTuyen_PhamTuanAnh_AIEngineerIntern.pdf')
+add_para(doc, "Trân trọng,", size=13, space_after=24)
+add_para(doc, "Phạm Tuấn Anh", size=13, bold=True, space_after=0)
 
-    doc.save(output_path)
-    print(f"Đã tạo thư ứng tuyển + email: {output_path}")
+# ============================================================
+# EMAIL (page 2)
+# ============================================================
+add_page_break(doc)
 
-if __name__ == '__main__':
-    create_cover_letter_email('output/ThuUngTuyen_Email_PhamTuanAnh.docx')
+add_para(doc, "EMAIL GỬI HỒ SƠ ỨNG TUYỂN", size=16, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, space_after=12)
+
+add_para(doc, "Chủ đề: Phạm Tuấn Anh — AI Engineer Intern — VinAI", size=13, bold=True, space_after=8)
+
+add_para(doc, "Kính gửi Anh/Chị Phòng Tuyển dụng Nhân sự VinAI,", size=13, space_after=6)
+
+add_para(doc, "Em tên là Phạm Tuấn Anh, sinh viên năm cuối chuyên ngành Công nghệ Thông tin tại Học viện Công nghệ Bưu chính Viễn thông (PTIT). Em viết email này để ứng tuyển vị trí AI Engineer Intern tại VinAI.", size=13, space_after=6)
+
+add_para(doc, "Qua quá trình học tập và thực hành, em đã xây dựng được nền tảng vững chắc về AI/ML, bao gồm: phát triển mô hình deep learning với PyTorch, fine-tuning Vision Transformer, xây dựng hệ thống nhận dạng giọng nói, và xử lý ngôn ngữ tự nhiên. Em đặc biệt quan tâm đến các nghiên cứu về AI tiếng Việt và multi-modal AI — những lĩnh vực trọng tâm của VinAI.", size=13, space_after=6)
+
+add_para(doc, "Em tin rằng với kiến thức chuyên môn và tinh thần ham học hỏi, em có thể đóng góp tích cực vào các dự án nghiên cứu và phát triển sản phẩm AI của VinAI, đồng thời tích lũy được kinh nghiệm quý báu từ đội ngũ kỹ sư hàng đầu.", size=13, space_after=6)
+
+add_para(doc, "Em xin đính kèm CV và thư ứng tuyển chi tiết. Rất mong nhận được phản hồi từ Anh/Chị.", size=13, space_after=6)
+
+add_para(doc, "Em xin cảm ơn!", size=13, space_after=12)
+
+add_para(doc, "Trân trọng,", size=13, space_after=18)
+add_para(doc, "Phạm Tuấn Anh", size=13, bold=True, space_after=2)
+add_para(doc, "SĐT: 0912 345 678", size=11, space_after=2)
+add_para(doc, "Email: phamtuananh.ptit@gmail.com", size=11, space_after=2)
+add_para(doc, "LinkedIn: linkedin.com/in/phamtuananh", size=11, space_after=0)
+
+add_para(doc, "File đính kèm:", size=12, bold=True, space_after=4)
+add_para(doc, "1. CV_PhamTuanAnh_AIEngineerIntern.pdf", size=11, space_after=2)
+add_para(doc, "2. ThuUngTuyen_PhamTuanAnh_VinAI.pdf", size=11, space_after=0)
+
+output_path = 'output/ThuUngTuyen_Email_PhamTuanAnh_VinAI.docx'
+doc.save(output_path)
+print(f'Da tao: {output_path}')

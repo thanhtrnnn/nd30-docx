@@ -272,6 +272,19 @@ Nơi nhận:
 - Dưới đường kẻ nét liền kéo hết chiều ngang
 - Trang đầu tiên
 
+### 6. Bảng nội dung (content tables)
+NĐ30 không có quy định riêng cho bảng nội dung — áp dụng chung quy tắc body text:
+
+- **Cỡ chữ**: 12–13pt (giảm 1pt so với body 13–14pt để vừa dense data)
+- **Phông**: Times New Roman, Unicode, màu đen
+- **Kiểu**: Table Grid (viền nét liền tất cả ô)
+- **Header row**: IN HOA, đậm, canh giữa; lặp lại khi bảng sang trang mới (`w:tblHeader`)
+- **Data cells**: in thường, canh trái; chữ cái đầu mỗi mục viết hoa
+- **Bullet points trong ô**: dùng `- ` prefix, tách bằng dấu chấm phẩy (;)
+- **Khoảng cách dòng trong ô**: 240 DXA (dòng đơn), before/after 20–40 DXA
+- **Chiều rộng bảng**: 100% chiều ngang vùng text
+- **Trình bày ngang**: nếu bảng quá rộng → được phép xoay trang ngang (landscape)
+
 ---
 
 ## IV. BẢNG TÓM TẮT NHANH
@@ -300,3 +313,5 @@ Nơi nhận:
 | Phụ lục (tiêu đề) | IN HOA | 13–14 | Đứng, đậm |
 | Ký hiệu soạn thảo | IN HOA | 11 | Đứng |
 | Địa chỉ CQ | in thường | 11–12 | Đứng |
+| Bảng header row | IN HOA | 12–13 | Đứng, đậm, canh giữa |
+| Bảng data cells | in thường | 12–13 | Đứng, canh trái |

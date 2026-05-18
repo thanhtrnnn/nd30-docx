@@ -15,13 +15,13 @@ from docx.oxml import OxmlElement
 # ============================================================
 PAGE_W = 11906  # A4 width DXA
 PAGE_H = 16838  # A4 height DXA
-MARGIN_TOP = 1134
+MARGIN_TOP = 1134   # 20mm (NĐ30 minimum)
 MARGIN_RIGHT = 851
-MARGIN_BOTTOM = 1134
+MARGIN_BOTTOM = 1134 # 20mm
 MARGIN_LEFT = 1701
 
-COL_LEFT = 3500   # Header left col DXA
-COL_RIGHT = 5571  # Header right col DXA
+COL_LEFT = 4082   # Header left col DXA (~45%)
+COL_RIGHT = 4989  # Header right col DXA (~55%)
 
 # Font sizes (half-points)
 SZ_QH = 26       # Quốc hiệu: 13pt
@@ -38,19 +38,20 @@ SZ_NOI_NHAN_ITEM = 22   # Items: 11pt
 SZ_CHUC_VU = 28   # Chức vụ: 14pt
 SZ_CHU_KY = 28     # Chữ ký: 14pt
 
-# Body spacing: 6pt minimum per spec
-SP_BODY = 120  # 6pt
-SP_LINE = 340  # EXACT line spacing
+# Body spacing (from mau_to_trinh.docx template)
+SP_BODY_AFTER = 120   # after=120 DXA (6pt)
+SP_LINE = 276         # line=276 auto (body paragraphs)
+SP_HEADER_LINE = 240  # line=240 auto (header/footer table paragraphs)
 
-# Tighter spacing for headers/titles
-SP_SECTION_BEFORE = 120  # 6pt
-SP_SECTION_AFTER = 60    # 3pt
-SP_TITLE_BEFORE = 100    # 5pt
-SP_TITLE_AFTER = 60      # 3pt
-SP_SUBTITLE_BEFORE = 40  # 2pt
-SP_SUBTITLE_AFTER = 80   # 4pt
+# Section/title spacing (tighter)
+SP_SECTION_BEFORE = 30
+SP_SECTION_AFTER = 0
+SP_TITLE_BEFORE = 240   # template: 240
+SP_TITLE_AFTER = 0      # template: 0
+SP_SUBTITLE_BEFORE = 0  # template: 0
+SP_SUBTITLE_AFTER = 0   # template: 0
 
-INDENT_FIRST = 720  # ~1.27cm
+INDENT_FIRST = 567  # 1cm (567 DXA)
 
 # ============================================================
 # HELPERS
@@ -76,7 +77,8 @@ def set_run_font(run, size_half_pt, bold=False, italic=False):
 
 def add_para(container, text, size=SZ_BODY, bold=False, italic=False,
              alignment=WD_ALIGN_PARAGRAPH.LEFT, no_indent=False,
-             spacing_before=None, spacing_after=None, line_spacing=None):
+             spacing_before=None, spacing_after=None, line_spacing=None,
+             first_line_indent=None):
     if hasattr(container, 'add_paragraph'):
         para = container.add_paragraph()
     else:
@@ -93,19 +95,22 @@ def add_para(container, text, size=SZ_BODY, bold=False, italic=False,
         para._element.insert(0, pPr)
 
     spacing = OxmlElement('w:spacing')
-    sb = spacing_before if spacing_before is not None else SP_BODY
-    sa = spacing_after if spacing_after is not None else SP_BODY
+    sb = spacing_before if spacing_before is not None else 0
+    sa = spacing_after if spacing_after is not None else SP_BODY_AFTER
     sl = line_spacing if line_spacing is not None else SP_LINE
     spacing.set(qn('w:before'), str(sb))
     spacing.set(qn('w:after'), str(sa))
     spacing.set(qn('w:line'), str(sl))
-    spacing.set(qn('w:lineRule'), 'exact')
+    spacing.set(qn('w:lineRule'), 'auto')
     old_sp = pPr.find(qn('w:spacing'))
     if old_sp is not None:
         pPr.remove(old_sp)
     pPr.append(spacing)
 
-    if not no_indent:
+    if first_line_indent is not None:
+        ind = OxmlElement('w:ind')
+        ind.set(qn('w:firstLine'), str(first_line_indent))
+    elif not no_indent:
         ind = OxmlElement('w:ind')
         ind.set(qn('w:firstLine'), str(INDENT_FIRST))
     else:
@@ -124,31 +129,17 @@ def add_spacer(container, before=40, after=0):
     return add_para(container, '', no_indent=True,
                     spacing_before=before, spacing_after=after)
 
-def top_border_paragraph(container, indent_left=1100, indent_right=1100):
-    para = container.add_paragraph()
-    pPr = para._element.find(qn('w:pPr'))
-    if pPr is None:
-        pPr = OxmlElement('w:pPr')
-        para._element.insert(0, pPr)
-
-    spacing = OxmlElement('w:spacing')
-    spacing.set(qn('w:before'), '20')
-    spacing.set(qn('w:after'), '0')
-    pPr.append(spacing)
-
-    ind = OxmlElement('w:ind')
-    ind.set(qn('w:left'), str(indent_left))
-    ind.set(qn('w:right'), str(indent_right))
-    pPr.append(ind)
-
-    pBdr = OxmlElement('w:pBdr')
-    top = OxmlElement('w:top')
-    top.set(qn('w:val'), 'single')
-    top.set(qn('w:sz'), '2')
-    top.set(qn('w:color'), '000000')
-    top.set(qn('w:space'), '1')
-    pBdr.append(top)
-    pPr.append(pBdr)
+def add_separator(container, text_length=None, side='center'):
+    """Add underscore separator line (1/3 to 1/2 of text width)."""
+    if text_length:
+        line_len = max(12, text_length // 3)
+    else:
+        line_len = 20
+    line_text = "_" * line_len
+    para = add_para(container, line_text, size=20,  # 10pt
+                    alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+                    spacing_before=20, spacing_after=60,
+                    line_spacing=SP_HEADER_LINE)
     return para
 
 def set_cell_no_borders(cell):
@@ -203,46 +194,50 @@ def set_table_width(table, width_pct=100):
 def create_header_table(doc, co_quan_chu_quan, co_quan_ban_hanh, so_ky_hieu,
                         dia_danh="Hà Nội", ngay_thang=", ngày 05 tháng 05 năm 2025",
                         show_trich_yeu_cv=False, trich_yeu_cv=""):
-    table = doc.add_table(rows=2, cols=2)
+    # Single-row table: số ký hiệu + ngày tháng in same cell as upper content
+    table = doc.add_table(rows=1, cols=2)
     set_table_width(table, 100)
 
-    left_top = table.rows[0].cells[0]
-    right_top = table.rows[0].cells[1]
-    set_cell_width(left_top, COL_LEFT)
-    set_cell_width(right_top, COL_RIGHT)
-    set_cell_no_borders(left_top)
-    set_cell_no_borders(right_top)
+    left = table.rows[0].cells[0]
+    right = table.rows[0].cells[1]
+    set_cell_width(left, COL_LEFT)
+    set_cell_width(right, COL_RIGHT)
+    set_cell_no_borders(left)
+    set_cell_no_borders(right)
 
+    # ── LEFT: cơ quan + separator + số ký hiệu ──
     if co_quan_chu_quan:
-        add_para(left_top, co_quan_chu_quan, size=SZ_CQ,
-                 alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
-    add_para(left_top, co_quan_ban_hanh, size=SZ_CQ, bold=True,
-             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
-    top_border_paragraph(left_top, indent_left=1350, indent_right=1350)
+        add_para(left, co_quan_chu_quan, size=SZ_CQ,
+                 alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+                 spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
+    add_para(left, co_quan_ban_hanh, size=SZ_CQ, bold=True,
+             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+             spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
+    add_separator(left, text_length=len(co_quan_ban_hanh))
 
-    add_para(right_top, "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", size=SZ_QH, bold=True,
-             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
-    add_para(right_top, "Độc lập - Tự do - Hạnh phúc", size=SZ_TN, bold=True,
-             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
-    top_border_paragraph(right_top, indent_left=1100, indent_right=1100)
-
-    left_bot = table.rows[1].cells[0]
-    right_bot = table.rows[1].cells[1]
-    set_cell_width(left_bot, COL_LEFT)
-    set_cell_width(right_bot, COL_RIGHT)
-    set_cell_no_borders(left_bot)
-    set_cell_no_borders(right_bot)
-
-    add_para(left_bot, so_ky_hieu, size=SZ_SO,
-             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
+    # Số ký hiệu — right after separator, tight spacing
+    add_para(left, so_ky_hieu, size=SZ_SO,
+             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+             spacing_before=6, spacing_after=0, line_spacing=SP_HEADER_LINE)
 
     if show_trich_yeu_cv and trich_yeu_cv:
-        add_para(left_bot, trich_yeu_cv, size=SZ_TRICH_YEU_CV,
+        add_para(left, trich_yeu_cv, size=SZ_TRICH_YEU_CV,
                  alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
-                 spacing_before=60, spacing_after=0)
+                 spacing_before=6, spacing_after=0, line_spacing=SP_HEADER_LINE)
 
-    add_para(right_bot, f"{dia_danh}{ngay_thang}", size=SZ_DIA_DANH, italic=True,
-             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
+    # ── RIGHT: quốc hiệu + tiêu ngữ + separator + ngày tháng ──
+    add_para(right, "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", size=SZ_QH, bold=True,
+             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+             spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
+    add_para(right, "Độc lập - Tự do - Hạnh phúc", size=SZ_TN, bold=True,
+             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+             spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
+    add_separator(right, text_length=30)
+
+    # Ngày tháng — right after separator, tight spacing
+    add_para(right, f"{dia_danh}{ngay_thang}", size=SZ_DIA_DANH, italic=True,
+             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+             spacing_before=6, spacing_after=0, line_spacing=SP_HEADER_LINE)
 
     return table
 
@@ -257,32 +252,38 @@ def create_footer_table(doc, noi_nhan_items, chuc_vu_ky, nguoi_ky,
 
     left = table.rows[0].cells[0]
     right = table.rows[0].cells[1]
-    set_cell_width(left, 5500)
-    set_cell_width(right, 4500)
+    set_cell_width(left, 4535)   # 50%
+    set_cell_width(right, 4535)  # 50%
     set_cell_no_borders(left)
     set_cell_no_borders(right)
 
+    # Footer paragraphs: all before=0, after=0, line=240
     add_para(left, "Nơi nhận:", size=SZ_NOI_NHAN_TITLE, bold=True, italic=True,
-             no_indent=True, spacing_before=60, spacing_after=30)
+             no_indent=True, spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
     for item in noi_nhan_items:
         add_para(left, item, size=SZ_NOI_NHAN_ITEM,
-                 no_indent=True, spacing_before=0, spacing_after=10)
+                 no_indent=True, spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
 
     valid_prefixes = ["KT", "TL", "TUQ", "TM", "Q"]
     if cap_ky.upper() in valid_prefixes and chuc_vu_cap_tren:
         add_para(right, f"{cap_ky.upper()}. {chuc_vu_cap_tren}", size=SZ_CHUC_VU,
                  bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
-                 spacing_before=0, spacing_after=30)
+                 spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
 
     add_para(right, chuc_vu_ky, size=SZ_CHUC_VU, bold=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
-             spacing_before=0, spacing_after=30)
+             spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
     add_para(right, "(Ký, ghi rõ họ tên)", size=SZ_CHU_KY, italic=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
-             spacing_before=20, spacing_after=200)
+             spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
+    # 3 empty paragraphs for signature space (template: line=240 each = 720 DXA gap)
+    for _ in range(3):
+        add_para(right, "", size=SZ_CHU_KY,
+                 alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
+                 spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
     add_para(right, nguoi_ky, size=SZ_CHU_KY, bold=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
-             spacing_before=0, spacing_after=60)
+             spacing_before=0, spacing_after=0, line_spacing=SP_HEADER_LINE)
 
     return table
 
@@ -293,14 +294,12 @@ def create_footer_table(doc, noi_nhan_items, chuc_vu_ky, nguoi_ky,
 def create_to_trinh(doc):
     create_header_table(
         doc,
-        co_quan_chu_quan="BỘ THÔNG TIN VÀ TRUYỀN THÔNG",
-        co_quan_ban_hanh="HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG",
-        so_ky_hieu="Số: 01/2025/TTr-PTIT",
+        co_quan_chu_quan="HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG",
+        co_quan_ban_hanh="KHOA CÔNG NGHỆ THÔNG TIN 1",
+        so_ky_hieu="Số: 01/2026/TTr-CNTT1",
         dia_danh="Hà Nội",
-        ngay_thang=", ngày 05 tháng 05 năm 2025"
+        ngay_thang=", ngày 10 tháng 05 năm 2026"
     )
-
-    add_spacer(doc, before=80, after=0)
 
     add_para(doc, "TỜ TRÌNH", size=SZ_TEN_LOAI, bold=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
@@ -310,10 +309,11 @@ def create_to_trinh(doc):
              size=SZ_TRICH_YEU, bold=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SUBTITLE_BEFORE, spacing_after=SP_SUBTITLE_AFTER)
+    add_separator(doc, text_length=55)
 
     add_para(doc, "Kính gửi: Ban Giám đốc Học viện Công nghệ Bưu chính Viễn thông",
-             size=SZ_BODY, italic=True, no_indent=True,
-             spacing_before=60, spacing_after=80)
+             size=SZ_BODY, first_line_indent=567,
+             spacing_before=240, spacing_after=60)
 
     add_para(doc, "Căn cứ Luật Khoa học và Công nghệ ngày 18/6/2013;",
              size=SZ_BODY, italic=True, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
@@ -321,29 +321,29 @@ def create_to_trinh(doc):
              size=SZ_BODY, italic=True, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
     add_para(doc, "Căn cứ Quy chế quản lý khoa học và công nghệ của Học viện Công nghệ Bưu chính Viễn thông;",
              size=SZ_BODY, italic=True, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_spacer(doc, before=30, after=30)
+
+    add_para(doc, "Khoa Công nghệ Thông tin 1 trình Ban Giám đốc Học viện nội dung đề xuất đề tài khoa học và công nghệ như sau:",
+             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
 
     add_para(doc, "I. SỰ CẦN THIẾT VÀ CĂN CỨ ĐỀ XUẤT",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SECTION_BEFORE, spacing_after=SP_SECTION_AFTER)
     add_para(doc, "Gia Lai là tỉnh có tỷ lệ đồng bào dân tộc thiểu số chiếm 44,7% dân số, trong đó người Jrai và Bahnar chiếm tỷ lệ lớn. Tiếng Jrai là ngôn ngữ được sử dụng rộng rãi trong sinh hoạt cộng đồng nhưng đang đối mặt với nguy cơ mai một do quá trình đô thị hóa và thiếu hụt tài liệu giảng dạy chuẩn hóa. Việc ứng dụng trí tuệ nhân tạo (AI) vào bảo tồn và giảng dạy tiếng Jrai không chỉ giúp lưu giữ di sản ngôn ngữ mà còn thúc đẩy chuyển đổi số trong giáo dục tại tỉnh Gia Lai.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "Căn cứ Nghị quyết số 57-NQ/TW ngày 22/12/2024 của Bộ Chính trị về đột phá phát triển khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số quốc gia; Căn cứ Quyết định số 1131/QĐ-BTTTT ngày 15/4/2025 của Bộ Thông tin và Truyền thông về Kế hoạch chuyển đổi số ngành TT&TT năm 2025, Khoa Công nghệ Thông tin – PTIT đề xuất thực hiện đề tài nghiên cứu ứng dụng AI phục vụ bảo tồn và giảng dạy tiếng Jrai.",
+    add_para(doc, "Căn cứ Nghị quyết số 57-NQ/TW ngày 22/12/2024 của Bộ Chính trị về đột phá phát triển khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số quốc gia; Căn cứ Quyết định số 1131/QĐ-BTTTT ngày 15/4/2025 của Bộ Thông tin và Truyền thông về Kế hoạch chuyển đổi số ngành TT&TT năm 2025, Khoa Công nghệ Thông tin 1 đề xuất thực hiện đề tài nghiên cứu ứng dụng AI phục vụ bảo tồn và giảng dạy tiếng Jrai.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
 
     add_para(doc, "II. NỘI DUNG ĐỀ TÀI",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SECTION_BEFORE, spacing_after=SP_SECTION_AFTER)
-    add_para(doc, "Tên đề tài: Nền tảng AI hỗ trợ bảo tồn và dạy học tiếng Jrai (định hướng mở rộng tiếng Bahnar) phục vụ chuyển đổi số tỉnh Gia Lai.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "Loại hình: Đề tài nghiên cứu ứng dụng và phát triển công nghệ.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "Thời gian thực hiện: 12 tháng kể từ ngày được phê duyệt.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "Đơn vị chủ trì: Khoa Công nghệ Thông tin – Học viện Công nghệ Bưu chính Viễn thông.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "Chủ nhiệm đề tài: TS. Phạm Vũ Minh Tú.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
+    for item in [
+        "- Tên đề tài: Nền tảng AI hỗ trợ bảo tồn và dạy học tiếng Jrai (định hướng mở rộng tiếng Bahnar) phục vụ chuyển đổi số tỉnh Gia Lai.",
+        "- Loại hình: Đề tài nghiên cứu ứng dụng và phát triển công nghệ.",
+        "- Thời gian thực hiện: 12 tháng kể từ ngày được phê duyệt.",
+        "- Đơn vị chủ trì: Khoa Công nghệ Thông tin 1 – Học viện Công nghệ Bưu chính Viễn thông.",
+        "- Chủ nhiệm đề tài: TS. Phạm Vũ Minh Tú.",
+    ]:
+        add_para(doc, item, size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
 
     add_para(doc, "III. DỰ KIẾN KINH PHÍ",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
@@ -354,20 +354,18 @@ def create_to_trinh(doc):
     add_para(doc, "IV. ĐỀ NGHỊ",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SECTION_BEFORE, spacing_after=SP_SECTION_AFTER)
-    add_para(doc, "Khoa Công nghệ Thông tin kính đề nghị Ban Giám đốc Học viện Công nghệ Bưu chính Viễn thông xem xét, phê duyệt đề tài khoa học và công nghệ nêu trên và cấp kinh phí để triển khai theo quy định.",
+    add_para(doc, "Khoa Công nghệ Thông tin 1 kính đề nghị Ban Giám đốc Học viện Công nghệ Bưu chính Viễn thông xem xét, phê duyệt đề tài khoa học và công nghệ nêu trên và cấp kinh phí để triển khai theo quy định.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-
-    add_spacer(doc, before=80, after=0)
 
     create_footer_table(
         doc,
         noi_nhan_items=[
             "- Như kính gửi (để phê duyệt);",
             "- Phòng Khoa học, Công nghệ và HTQT (để phối hợp);",
-            "- Lưu: VT, PTIT."
+            "- Lưu: VT, Khoa CNTT1."
         ],
-        chuc_vu_ky="TRƯỞNG KHOA CÔNG NGHỆ THÔNG TIN",
-        nguoi_ky="TS. Nguyễn Minh Tuấn"
+        chuc_vu_ky="TRƯỞNG KHOA CÔNG NGHỆ THÔNG TIN 1",
+        nguoi_ky="ThS. Nguyễn Duy Phương"
     )
 
 # ============================================================
@@ -379,24 +377,20 @@ def create_cong_van(doc):
         doc,
         co_quan_chu_quan="",
         co_quan_ban_hanh="HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG",
-        so_ky_hieu="Số: 02/2025/CV-PTIT",
+        so_ky_hieu="Số: 01/2026/CV-HV",
         show_trich_yeu_cv=True,
         trich_yeu_cv="V/v đề nghị phối hợp triển khai đề tài khoa học và công nghệ",
         dia_danh="Hà Nội",
-        ngay_thang=", ngày 12 tháng 05 năm 2025"
+        ngay_thang=", ngày 15 tháng 05 năm 2026"
     )
 
-    add_spacer(doc, before=40, after=40)
-
     add_para(doc, "Kính gửi: Sở Khoa học và Công nghệ tỉnh Gia Lai",
-             size=SZ_BODY, no_indent=True,
-             spacing_before=40, spacing_after=60)
-
-    add_spacer(doc, before=30, after=30)
+             size=SZ_BODY, first_line_indent=567,
+             spacing_before=240, spacing_after=60)
 
     paragraphs_text = [
-        "Học viện Công nghệ Bưu chính Viễn thông (PTIT) đang triển khai đề tài nghiên cứu khoa học và công nghệ: \"Nền tảng AI hỗ trợ bảo tồn và dạy học tiếng Jrai (định hướng mở rộng tiếng Bahnar) phục vụ chuyển đổi số tỉnh Gia Lai\", do TS. Phạm Vũ Minh Tú làm chủ nhiệm, thuộc Khoa Công nghệ Thông tin.",
-        "Đây là đề tài gắn trực tiếp với địa bàn tỉnh Gia Lai, nhằm xây dựng nền tảng AI phục vụ bảo tồn ngôn ngữ và thúc đẩy chuyển đổi số trong giáo dục. Đề tài bao gồm: thu thập và chuẩn hóa ngữ liệu tiếng Jrai; phát triển mô hình AI nhận diện phát âm, hội thoại tự động, chuyển văn bản thành giọng nói; xây dựng ứng dụng di động và học liệu số cho học sinh, giáo viên và cộng đồng.",
+        "Học viện Công nghệ Bưu chính Viễn thông (PTIT) đang triển khai đề tài nghiên cứu khoa học và công nghệ: \"Nền tảng AI hỗ trợ bảo tồn và dạy học tiếng Jrai (định hướng mở rộng tiếng Bahnar) phục vụ chuyển đổi số tỉnh Gia Lai\", do TS. Phạm Vũ Minh Tú làm chủ nhiệm, thuộc Khoa Công nghệ Thông tin 1.",
+        "Đề tài bao gồm ba thành phần chính: (1) Nền tảng AI tìm kiếm và tạo nội dung số tiếng Jrai (từ điển ba ngôn ngữ Jrai-Việt-Anh, chatbot AI hỏi-đáp, công cụ chuyển văn bản thành giọng nói và ngược lại); (2) Hệ sinh thái E-learning với khóa học viết, đọc, nói tiếng Jrai ở 3 cấp độ; (3) Cổng kết nối cộng đồng mở rộng từ điển và bách khoa toàn thư văn hóa Jrai.",
         "Học viện Công nghệ Bưu chính Viễn thông trân trọng đề nghị Sở Khoa học và Công nghệ tỉnh Gia Lai xem xét phối hợp trong các nội dung sau:",
     ]
     for text in paragraphs_text:
@@ -412,8 +406,6 @@ def create_cong_van(doc):
 
     add_para(doc, "Học viện Công nghệ Bưu chính Viễn thông rất mong nhận được phản hồi từ Quý Sở. Đầu mối liên hệ: TS. Phạm Vũ Minh Tú – ĐT: 090 459 2738, Email: tuptm@ptit.edu.vn.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-
-    add_spacer(doc, before=40, after=0)
 
     create_footer_table(
         doc,
@@ -432,17 +424,86 @@ def create_cong_van(doc):
 # THÔNG BÁO
 # ============================================================
 
+def _set_cell_spacing(para, before=40, after=40, line=240):
+    """Set spacing on a paragraph inside a table cell."""
+    pPr = para._element.find(qn('w:pPr'))
+    if pPr is None:
+        pPr = OxmlElement('w:pPr')
+        para._element.insert(0, pPr)
+    old_sp = pPr.find(qn('w:spacing'))
+    if old_sp is not None:
+        pPr.remove(old_sp)
+    spacing = OxmlElement('w:spacing')
+    spacing.set(qn('w:before'), str(before))
+    spacing.set(qn('w:after'), str(after))
+    spacing.set(qn('w:line'), str(line))
+    spacing.set(qn('w:lineRule'), 'auto')
+    pPr.append(spacing)
+
+def _cap_first(s):
+    """Capitalize first letter of string."""
+    if not s:
+        return s
+    return s[0].upper() + s[1:]
+
+def add_table_grid(doc, headers, rows, font_size=12):
+    """Add a Table Grid table with headers and data rows.
+    Cells containing ';' are split into bullet points.
+    Header row repeats on each new page (tblHeader)."""
+    table = doc.add_table(rows=1 + len(rows), cols=len(headers))
+    table.style = 'Table Grid'
+    set_table_width(table, 100)
+
+    # Header row — repeat on page break
+    hdr_row = table.rows[0]
+    trPr = hdr_row._tr.get_or_add_trPr()
+    tblHeader = OxmlElement('w:tblHeader')
+    trPr.append(tblHeader)
+
+    for i, h in enumerate(headers):
+        cell = hdr_row.cells[i]
+        cell.text = ''
+        p = cell.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = p.add_run(h.upper())
+        set_run_font(run, font_size * 2, bold=True)
+        _set_cell_spacing(p, before=40, after=40, line=240)
+
+    # Data rows — capitalize first letter of each item
+    for r_idx, row_data in enumerate(rows):
+        for c_idx, cell_text in enumerate(row_data):
+            cell = table.rows[r_idx + 1].cells[c_idx]
+            cell.text = ''
+            items = [s.strip() for s in cell_text.split(';') if s.strip()]
+            if len(items) <= 1:
+                p = cell.paragraphs[0]
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+                run = p.add_run(_cap_first(cell_text))
+                set_run_font(run, font_size * 2, bold=False)
+                _set_cell_spacing(p, before=40, after=40, line=240)
+            else:
+                for j, item in enumerate(items):
+                    if j == 0:
+                        p = cell.paragraphs[0]
+                    else:
+                        p = cell.add_paragraph()
+                    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+                    run = p.add_run(f"- {_cap_first(item)}")
+                    set_run_font(run, font_size * 2, bold=False)
+                    _set_cell_spacing(p, before=20, after=20, line=240)
+
+    return table
+
+
 def create_thong_bao(doc):
     create_header_table(
         doc,
         co_quan_chu_quan="",
         co_quan_ban_hanh="HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG",
-        so_ky_hieu="Số: 03/2025/TB-PTIT",
+        so_ky_hieu="Số: 01/2026/TB-HV",
         dia_danh="Hà Nội",
-        ngay_thang=", ngày 20 tháng 05 năm 2025"
+        ngay_thang=", ngày 20 tháng 05 năm 2026"
     )
-
-    add_spacer(doc, before=80, after=0)
 
     add_para(doc, "THÔNG BÁO", size=SZ_TEN_LOAI, bold=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
@@ -452,12 +513,12 @@ def create_thong_bao(doc):
              size=SZ_TRICH_YEU, bold=True,
              alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SUBTITLE_BEFORE, spacing_after=SP_SUBTITLE_AFTER)
+    add_separator(doc, text_length=40)
 
-    add_para(doc, "Căn cứ Tờ trình số 01/2025/TTr-PTIT ngày 05/5/2025 của Khoa Công nghệ Thông tin về việc đề nghị phê duyệt và cấp kinh phí đề tài;",
+    add_para(doc, "Căn cứ Tờ trình số 01/2026/TTr-CNTT1 ngày 10/5/2026 của Khoa Công nghệ Thông tin 1 về việc đề nghị phê duyệt và cấp kinh phí đề tài;",
              size=SZ_BODY, italic=True, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "Căn cứ Kế hoạch khoa học và công nghệ năm 2025 của Học viện Công nghệ Bưu chính Viễn thông;",
+    add_para(doc, "Căn cứ Kế hoạch khoa học và công nghệ năm 2026 của Học viện Công nghệ Bưu chính Viễn thông;",
              size=SZ_BODY, italic=True, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_spacer(doc, before=30, after=30)
 
     add_para(doc, "Học viện Công nghệ Bưu chính Viễn thông thông báo về kế hoạch triển khai đề tài khoa học và công nghệ như sau:",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
@@ -471,7 +532,7 @@ def create_thong_bao(doc):
     add_para(doc, "2. Đơn vị và cá nhân phụ trách",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SECTION_BEFORE, spacing_after=SP_SECTION_AFTER)
-    add_para(doc, "- Đơn vị chủ trì: Khoa Công nghệ Thông tin – Học viện Công nghệ Bưu chính Viễn thông.",
+    add_para(doc, "- Đơn vị chủ trì: Khoa Công nghệ Thông tin 1 – Học viện Công nghệ Bưu chính Viễn thông.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
     add_para(doc, "- Chủ nhiệm đề tài: TS. Phạm Vũ Minh Tú – ĐT: 090 459 2738.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
@@ -481,16 +542,34 @@ def create_thong_bao(doc):
     add_para(doc, "3. Thời gian và kế hoạch triển khai",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SECTION_BEFORE, spacing_after=SP_SECTION_AFTER)
-    add_para(doc, "- Thời gian thực hiện: 12 tháng, từ tháng 6/2025 đến tháng 5/2026.",
+    add_para(doc, "Thời gian thực hiện: 12 tháng, từ tháng 6/2026 đến tháng 5/2027. Kế hoạch chi tiết như sau:",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "- Tháng 6–8/2025: Khảo sát thực trạng; xây dựng và chuẩn hóa kho ngữ liệu số tiếng Jrai.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "- Tháng 9–12/2025: Phát triển các mô-đun AI (nhận diện phát âm, hội thoại, chuyển văn bản thành giọng nói).",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "- Tháng 1–3/2026: Xây dựng ứng dụng di động; tích hợp mô-đun AI và học liệu số.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
-    add_para(doc, "- Tháng 4–5/2026: Thử nghiệm tại cơ sở giáo dục tại tỉnh Gia Lai; hoàn thiện và nghiệm thu.",
-             size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
+
+    add_table_grid(doc,
+        headers=["Giai đoạn", "Thời gian", "Hoạt động chính", "Sản phẩm"],
+        rows=[
+            ["1. Khảo sát", "Tháng 6–7/2026",
+             "Khảo sát ngôn ngữ, văn hóa, nhu cầu cộng đồng Jrai; nghiên cứu dự án hiện có (YSJ, UET-TLU, VNeID Jrai)",
+             "Báo cáo khảo sát; xác định pipeline xử lý"],
+            ["2. Thu thập dữ liệu", "Tháng 8–10/2026",
+             "Chuẩn hóa từ điển Jrai-Việt-Anh (~4.000 từ); xây dựng corpus song ngữ; thu thập âm thanh; phát triển Q&A chatbot",
+             "Bộ dữ liệu từ điển; corpus song ngữ; 500 cặp Q&A"],
+            ["3. Phát triển AI", "Tháng 11/2026–1/2027",
+             "Tinh chỉnh PhoGPT; triển khai RAG cho chatbot; xây dựng API từ điển; áp dụng Active Learning",
+             "Mô hình AI tiếng Jrai; API từ điển; portal đóng góp cộng đồng"],
+            ["4. Thử nghiệm", "Tháng 2–4/2027",
+             "Ra mắt beta; 3 hội thảo phản hồi (2 tại PTIT Gia Lai + 1 ĐH địa phương); triển khai E-learning + ứng dụng đa nền tảng",
+             "Ứng dụng iOS/Android/Web; khóa học E-learning"],
+            ["5. Nghiệm thu", "Tháng 5/2027",
+             "Tổng kết; đánh giá chất lượng; báo cáo Sở KH&CN Gia Lai",
+             "Hồ sơ nghiệm thu; báo cáo tổng kết"],
+        ],
+        font_size=12
+    )
+
+    # Spacer after table
+    sp = doc.add_paragraph()
+    _set_cell_spacing(sp, before=0, after=120, line=240)
 
     add_para(doc, "4. Kinh phí thực hiện",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
@@ -501,21 +580,19 @@ def create_thong_bao(doc):
     add_para(doc, "5. Yêu cầu",
              size=SZ_BODY, bold=True, alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True,
              spacing_before=SP_SECTION_BEFORE, spacing_after=SP_SECTION_AFTER)
-    add_para(doc, "Các đơn vị liên quan thuộc Học viện phối hợp chặt chẽ với Khoa Công nghệ Thông tin trong suốt quá trình triển khai. Mọi thắc mắc xin liên hệ Phòng Khoa học, Công nghệ và HTQT.",
+    add_para(doc, "Các đơn vị liên quan thuộc Học viện phối hợp chặt chẽ với Khoa Công nghệ Thông tin 1 trong suốt quá trình triển khai. Mọi thắc mắc xin liên hệ Phòng Khoa học, Công nghệ và HTQT.",
              size=SZ_BODY, alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
 
-    add_spacer(doc, before=80, after=0)
     add_para(doc, "./.", size=SZ_BODY, bold=True,
-             alignment=WD_ALIGN_PARAGRAPH.CENTER, no_indent=True)
-
-    add_spacer(doc, before=80, after=0)
+             alignment=WD_ALIGN_PARAGRAPH.RIGHT, no_indent=True,
+             spacing_before=60, spacing_after=120)
 
     create_footer_table(
         doc,
         noi_nhan_items=[
             "- Các Khoa, Phòng, Ban liên quan (để thực hiện);",
             "- Sở KH&CN tỉnh Gia Lai (để phối hợp);",
-            "- Lưu: VT, PTIT."
+            "- Lưu: VT, HV."
         ],
         cap_ky="KT",
         chuc_vu_cap_tren="GIÁM ĐỐC",

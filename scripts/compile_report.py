@@ -62,9 +62,7 @@ def add_para(doc, text, bold=False, italic=False, size=Pt(13), align=None):
     return p
 
 def add_page_break(doc):
-    p = doc.add_paragraph()
-    run = p.add_run()
-    run.add_break(docx.enum.text.WD_BREAK.PAGE)
+    doc.add_page_break()
 
 def create_cover_page(doc):
     """Tạo trang bìa"""
@@ -172,151 +170,140 @@ def create_foreword(doc):
     )
 
 def create_theory(doc):
-    """Tạo phần lý thuyết"""
+    """Tạo phần lý thuyết — phiên bản chi tiết với trích dẫn điều khoản NĐ30"""
     add_heading_styled(doc, 'PHẦN I: HỆ THỐNG LÝ THUYẾT', level=1)
 
     # ==================== CÂU 1 ====================
-    add_heading_styled(doc, 'Câu 1: Các thành phần thể thức chính của văn bản hành chính theo Nghị định 30/2020/NĐ-CP', level=2)
+    add_heading_styled(doc, 'Câu 1: Chín thành phần thể thức văn bản hành chính theo NĐ30/2020/NĐ-CP', level=2)
 
     add_para(doc,
-        'Theo Phụ lục I của Nghị định 30/2020/NĐ-CP, văn bản hành chính phải đảm bảo '
-        'đầy đủ chín thành phần thể thức chính. Mỗi thành phần có vai trò riêng trong việc '
-        'xác định tính hợp pháp, tính chính thống và nội dung của văn bản.'
+        'Theo Phụ lục I của Nghị định 30/2020/NĐ-CP ngày 05/3/2020 của Chính phủ, '
+        'văn bản hành chính phải đảm bảo chín thành phần thể thức chính. Mỗi thành phần '
+        'có quy định cụ thể về vị trí, cỡ chữ, kiểu chữ và cách trình bày.'
     )
 
     # 1. Quốc hiệu, tiêu ngữ
-    add_para(doc, '1. Quốc hiệu, tiêu ngữ', bold=True)
-
+    add_para(doc, '1. Quốc hiệu và Tiêu ngữ', bold=True)
     add_para(doc,
-        'Quốc hiệu và tiêu ngữ là thành phần thể hiện chủ quyền quốc gia, đặt ở vị trí '
-        'trang trọng nhất của văn bản. Quốc hiệu "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM" '
-        'được trình bày bằng chữ in hoa, cỡ chữ 12-13pt, đứng, đậm, canh giữa phía trên bên phải. '
+        'Quốc hiệu "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM" là thành phần bắt buộc, '
+        'thể hiện chủ quyền quốc gia. Theo Khoản 1 Điều 5 NĐ30, quốc hiệu được trình bày '
+        'bằng chữ IN HOA, cỡ chữ 12-13pt, kiểu đứng, đậm, đặt bên phải trên cùng trang đầu tiên. '
         'Tiêu ngữ "Độc lập - Tự do - Hạnh phúc" đặt ngay dưới quốc hiệu, cỡ chữ 13-14pt, '
-        'in thường (chữ đầu mỗi cụm từ viết hoa), đứng, đậm, canh giữa. Giữa các cụm từ '
-        'sử dụng gạch nối (-) có cách chữ. Dưới tiêu ngữ có đường kẻ ngang nét liền, '
-        'dài bằng dòng chữ. Khoảng cách giữa quốc hiệu và tiêu ngữ là dòng đơn, '
-        'cỡ chữ thống nhất (quốc hiệu 12pt thì tiêu ngữ 13pt, quốc hiệu 13pt thì tiêu ngữ 14pt).'
+        'in thường (chữ cái đầu mỗi cụm từ viết hoa), đứng, đậm, KHÔNG in nghiêng. '
+        'Giữa hai dòng này là đường kẻ ngang nét liền, dài bằng dòng chữ. Theo Quy tắc thống nhất '
+        'cỡ chữ (Mục I.5 Phụ lục I), nếu quốc hiệu dùng 12pt thì tiêu ngữ dùng 13pt: '
+        'nếu quốc hiệu dùng 13pt thì tiêu ngữ dùng 14pt.'
     )
 
     # 2. Tên cơ quan chủ quản
-    add_para(doc, '2. Tên cơ quan chủ quản', bold=True)
-
+    add_para(doc, '2. Tên cơ quan, tổ chức chủ quản', bold=True)
     add_para(doc,
-        'Tên cơ quan chủ quản là tên cơ quan cấp trên trực tiếp của cơ quan ban hành văn bản, '
-        'trình bày bằng chữ in hoa, cỡ chữ 12-13pt, đứng, không đậm, canh giữa phía trên bên trái. '
-        'Tên cơ quan chủ quản giúp xác định mối quan hệ hệ thống hành chính và tính hợp pháp '
-        'của văn bản trong hệ thống quản lý nhà nước.'
+        'Tên cơ quan chủ quản trực tiếp là dòng trên cùng bên trái của bảng header, '
+        'trình bày bằng chữ IN HOA, cỡ 12-13pt, đứng, KHÔNG đậm. Nếu văn bản không có '
+        'cơ quan chủ quản thì bỏ trống dòng này. Theo Khoản 2 Điều 5 NĐ30, thành phần này '
+        'giúp xác định hệ thống hành chính mà cơ quan ban hành trực thuộc.'
     )
 
-    # 3. Tên cơ quan ban hành văn bản
-    add_para(doc, '3. Tên cơ quan ban hành văn bản', bold=True)
-
+    # 3. Tên cơ quan ban hành
+    add_para(doc, '3. Tên cơ quan, tổ chức ban hành văn bản', bold=True)
     add_para(doc,
-        'Tên cơ quan ban hành văn bản là tên đơn vị trực tiếp ra văn bản, trình bày bằng chữ '
-        'in hoa, cỡ chữ 12-13pt, đứng, đậm, canh giữa, đặt ngay dưới tên cơ quan chủ quản. '
-        'Dưới tên cơ quan ban hành có đường kẻ ngang nét liền. Tên cơ quan ban hành thể hiện '
-        'trách nhiệm pháp lý của đơn vị đối với nội dung văn bản.'
+        'Tên cơ quan ban hành đặt ngay dưới tên cơ quan chủ quản, trình bày bằng chữ IN HOA, '
+        'cỡ 12-13pt, đứng, đậm. Phía dưới có đường kẻ ngang nét liền, dài từ 1/3 đến 1/2 dòng chữ, '
+        'cân đối giữa dòng. Theo Khoản 3 Điều 5 NĐ30, đây là cơ quan có thẩm quyền ban hành văn bản, '
+        'chịu trách nhiệm về nội dung. Hai dòng tên cơ quan cách nhau dòng đơn.'
     )
 
-    # 4. Số, ký hiệu văn bản
-    add_para(doc, '4. Số, ký hiệu văn bản', bold=True)
-
+    # 4. Số, ký hiệu
+    add_para(doc, '4. Số, ký hiệu của văn bản', bold=True)
     add_para(doc,
-        'Số và ký hiệu văn bản là mã định danh duy nhất của văn bản, bao gồm số thứ tự '
-        'và ký hiệu theo quy định. Số được viết bằng chữ số Ả Rập, cỡ chữ 13pt, đứng, '
-        'canh giữa dưới tên cơ quan ban hành. Từ "Số" viết thường, sau dấu hai chấm. '
-        'Số nhỏ hơn 10 phải thêm số 0 phía trước (01, 02...09). Ký hiệu bao gồm các nhóm '
-        'viết tắt cách nhau bằng gạch chéo (/) và gạch nối (-). Ví dụ: "Số: 01/TTr-PTIT" '
-        'trong đó 01 là số thứ tự, TTr là viết tắt tờ trình, PTIT là viết tắt cơ quan.'
+        'Số và ký hiệu văn bản là mã định danh, bao gồm số thứ tự và ký hiệu phân loại. '
+        'Theo Khoản 4 Điều 5 NĐ30, từ "Số" in thường, cỡ 13pt, đứng, sau có dấu hai chấm. '
+        'Số nhỏ hơn 10 phải thêm số 0 phía trước (01, 02... 09). Ký hiệu dùng chữ IN HOA, '
+        'cỡ 13pt, ngăn cách bằng dấu gạch chéo và gạch nối. Ví dụ: "Số: 01/2025/TTr-PTIT". '
+        'Thành phần này đặt bên trái bảng header, cùng hàng ngang với địa danh, ngày tháng.'
     )
 
-    # 5. Địa danh, ngày tháng ban hành
-    add_para(doc, '5. Địa danh, ngày tháng ban hành', bold=True)
-
+    # 5. Địa danh, ngày tháng
+    add_para(doc, '5. Địa danh và thời gian ban hành', bold=True)
     add_para(doc,
-        'Địa danh và ngày tháng ban hành được trình bày bằng chữ in thường, cỡ chữ 13-14pt, '
-        'nghiêng, canh giữa. Địa danh là nơi ban hành văn bản, chữ cái đầu viết hoa, '
-        'sau địa danh có dấu phẩy. Ngày và tháng viết đầy đủ bằng chữ số Ả Rập, '
-        'ngày nhỏ hơn 10 phải thêm số 0 phía trước (ngày 05), tháng 1 và tháng 2 cũng thêm số 0 '
-        '(tháng 01, tháng 02). Dạng trình bày: "[Địa danh], ngày XX tháng XX năm XXXX".'
+        'Địa danh và ngày tháng ban hành đặt bên phải bảng header, cùng hàng ngang với số ký hiệu. '
+        'Theo Khoản 5 Điều 5 NĐ30, đây là thành phần DUY NHẤT được in nghiêng trong toàn bộ văn bản. '
+        'Cỡ chữ 13-14pt, chữ cái đầu địa danh viết hoa, sau địa danh có dấu phẩy. '
+        'Ngày và tháng nhỏ hơn 10 phải thêm số 0 phía trước (ví dụ: "ngày 05", "tháng 01").'
     )
 
-    # 6. Tên loại và trích yếu nội dung
+    # 6. Tên loại và trích yếu
     add_para(doc, '6. Tên loại và trích yếu nội dung', bold=True)
-
     add_para(doc,
-        'Tên loại văn bản (như TỜ TRÌNH, CÔNG VĂN, THÔNG BÁO) được trình bày bằng chữ '
-        'in hoa, cỡ chữ 13-14pt, đứng, đậm, canh giữa. Trích yếu nội dung tóm tắt ngắn gọn '
-        'nội dung chính của văn bản, trình bày bằng chữ in thường, cỡ chữ 13-14pt, đứng, đậm, '
-        'canh giữa, đặt ngay dưới tên loại. Dưới trích yếu có đường kẻ ngang dài 1/3-1/2 dòng chữ, '
-        'cân đối. Đối với công văn, trích yếu được trình bày dạng "V/v ..." cỡ chữ 12-13pt, '
-        'in thường, đứng, canh giữa dưới số ký hiệu.'
+        'Tên loại văn bản (Quyết định, Tờ trình, Thông báo...) trình bày bằng chữ IN HOA, '
+        'cỡ 13-14pt, đứng, đậm, căn giữa. Trích yếu nội dung đặt ngay dưới tên loại, in thường, '
+        'cỡ 13-14pt, đứng, đậm, căn giữa. Phía dưới có đường kẻ ngang dài 1/3 đến 1/2 dòng chữ. '
+        'Đối với công văn (không có tên loại), chỉ có trích yếu dạng "V/v...", cỡ 12-13pt, '
+        'đặt dưới số ký hiệu, cách 6pt. Theo Khoản 6 Điều 5 NĐ30, trích yếu phải ngắn gọn, '
+        'chính xác, phản ánh đúng nội dung chính của văn bản.'
     )
 
     # 7. Nội dung văn bản
     add_para(doc, '7. Nội dung văn bản', bold=True)
-
     add_para(doc,
-        'Nội dung văn bản là phần chính trình bày thông tin, được trình bày bằng chữ in thường, '
-        'cỡ chữ 13-14pt, đứng, canh đều hai bên lề. Lùi đầu dòng 1cm hoặc 1.27cm. '
-        'Nội dung có thể được chia thành các phần, chương, mục, tiểu mục, điều, khoản, điểm '
-        'theo thứ tự hợp lý. Tiêu đề phần/chương in hoa, đậm, canh giữa. '
-        'Tiêu đề mục sử dụng số La Mã (I, II, III), tiêu đề điều sử dụng số Ả Rập.'
+        'Nội dung là phần chính của văn bản, trình bày bằng chữ in thường, đứng, cỡ 13-14pt, '
+        'căn đều hai lề, lùi đầu dòng 1cm hoặc 1,27cm. Theo Khoản 7 Điều 5 NĐ30, khoảng cách '
+        'giữa các đoạn tối thiểu 6pt, khoảng cách dòng tối thiểu dòng đơn, tối đa 1,5 lines. '
+        'Căn cứ ban hành được in nghiêng, mỗi căn cứ trên một dòng riêng, cuối dòng dấu chấm phẩy, '
+        'dòng cuối dấu chấm. Bố cục nội dung chia theo Phần, Chương, Mục, Điều, Khoản, Điểm '
+        'với quy tắc đánh số và trình bày cụ thể.'
     )
 
     # 8. Chức vụ, họ tên, chữ ký
-    add_para(doc, '8. Chức vụ, họ tên, chữ ký người có thẩm quyền', bold=True)
-
+    add_para(doc, '8. Chức vụ, họ tên và chữ ký người có thẩm quyền', bold=True)
     add_para(doc,
-        'Khối chữ ký đặt ở cuối văn bản, phía bên phải. Chức vụ người ký được trình bày '
-        'bằng chữ in hoa, cỡ chữ 13-14pt, đứng, đậm, canh giữa. Dòng "(Ký, ghi rõ họ tên)" '
-        'trình bày bằng chữ nghiêng, canh giữa dưới chức vụ. Họ tên người ký trình bày '
-        'bằng chữ đứng, đậm, không ghi học hàm/học vi. Các trường hợp ký thay được quy định: '
-        'TM. (thay mặt), KT. (ký thay), Q. (giao quyền), TL. (thừa lệnh), TUQ. (thừa ủy quyền).'
+        'Theo Khoản 8 Điều 5 NĐ30, quyền hạn ký (TM., KT., Q., TL., TUQ.) và chức vụ người ký '
+        'trình bày bằng chữ IN HOA, cỡ 13-14pt, đứng, đậm, căn giữa bên phải. '
+        'Dòng "(Ký, ghi rõ họ tên)" in nghiêng, cỡ 13-14pt, đặt giữa chức vụ và họ tên. '
+        'Họ tên người ký in thường, đứng, đậm, cỡ 13-14pt, KHÔNG ghi học hàm, học vị. '
+        'Chữ ký tay đặt giữa chức vụ và họ tên.'
     )
 
-    # 9. Dấu của cơ quan
-    add_para(doc, '9. Dấu của cơ quan', bold=True)
-
+    # 9. Dấu cơ quan
+    add_para(doc, '9. Dấu của cơ quan, tổ chức', bold=True)
     add_para(doc,
-        'Dấu của cơ quan được đóng theo quy định của pháp luật, thường đặt đè lên tên '
-        'cơ quan ban hành và một phần chữ ký. Dấu tròn dùng cho cơ quan nhà nước, '
-        'dấu chức danh dùng cho cá nhân có thẩm quyền. Việc đóng dấu xác nhận tính hợp pháp '
-        'và chính thức của văn bản. Không phải văn bản nào cũng bắt buộc có dấu, '
-        'tùy theo quy định của từng loại văn bản và thẩm quyền ban hành.'
+        'Dấu cơ quan là con dấu đỏ, được đóng trùm lên khoảng 1/3 chữ ký về bên trái, '
+        'theo Khoản 9 Điều 5 NĐ30. Đối với văn bản điện tử, có thể sử dụng chữ ký số. '
+        'Dấu chỉ có giá trị khi được đóng đúng vị trí và trên văn bản có đủ các thành phần thể thức. '
+        'Không phải tất cả văn bản đều bắt buộc có dấu — tùy thuộc vào loại văn bản '
+        'và quy định của cơ quan ban hành.'
     )
 
     # ==================== CÂU 2 ====================
-    add_heading_styled(doc, 'Câu 2: Yêu cầu về nội dung và hình thức của CV ứng tuyển và những lưu ý khi soạn thảo email ứng tuyển', level=2)
+    add_heading_styled(doc, 'Câu 2: Yêu cầu về CV và lưu ý khi viết email xin việc', level=2)
 
-    add_para(doc, 'I. Yêu cầu về CV ứng tuyển', bold=True, size=Pt(13))
+    add_heading_styled(doc, 'I. Curriculum Vitae (CV)', level=2)
 
+    add_para(doc, '1. Định nghĩa và vai trò', bold=True)
     add_para(doc,
-        'CV (Curriculum Vitae) là bản tóm tắt thông tin cá nhân, học vấn, kinh nghiệm làm việc '
-        'và kỹ năng của ứng viên, đóng vai trò quan trọng trong quá trình tuyển dụng. '
-        'CV giúp nhà tuyển dụng đánh giá nhanh sự phù hợp của ứng viên với vị trí tuyển dụng.'
+        'CV (Curriculum Vitae) là bản tóm tắt thông tin cá nhân, học vấn, kinh nghiệm, '
+        'kỹ năng và thành tích của người ứng tuyển. CV đóng vai trò là "bộ mặt đầu tiên" '
+        'trước nhà tuyển dụng, giúp họ đánh giá sự phù hợp của ứng viên với vị trí tuyển dụng. '
+        'Theo giáo trình SKD1103, CV phải ngắn gọn (tối đa 2 trang A4), rõ ràng, chuyên nghiệp '
+        'và được tối ưu cho hệ thống ATS (Applicant Tracking System).'
     )
 
-    add_para(doc, '1. Các thành phần chính của CV', bold=True)
+    add_para(doc, '2. Mười một phần của CV', bold=True)
 
-    add_para(doc,
-        'Một bản CV chuyên nghiệp cần bao gồm các thành phần sau:'
-    )
-
-    components = [
-        ('Tiêu đề CV', 'Có nhiều cách đặt tiêu đề như "CV - Họ tên", "Hồ sơ ứng tuyển - Họ tên", hoặc "CV - Họ tên - Vị trí ứng tuyển". Tiêu đề nên chứa từ khóa liên quan đến vị trí để tối ưu hệ thống ATS.'),
-        ('Thông tin cá nhân', 'Bao gồm họ tên in hoa đậm, email chuyên nghiệp (không sử dụng nickname), số điện thoại đầy đủ mã quốc gia, địa chỉ (chỉ ghi thành phố), và liên kết LinkedIn/portfolio nếu có.'),
-        ('Mục tiêu nghề nghiệp', 'Phân chia rõ ràng thành mục tiêu ngắn hạn (1-3 năm) và dài hạn (3-5 năm). Ngắn gọn, cụ thể, chứa từ khóa từ mô tả công việc, nhấn mạnh khả năng đóng góp cho công ty.'),
-        ('Kinh nghiệm làm việc', 'Sắp xếp theo thứ tự thời gian ngược (mới nhất ở trên). Mỗi mục ghi rõ tên công ty, vị trí, thời gian, và mô tả trách nhiệm cùng thành tích đạt được, ưu tiên lượng hóa bằng số liệu.'),
-        ('Trình độ học vấn', 'Bao gồm tên trường, ngành học, thời gian học. Nếu có GPA cao, học bổng hoặc chứng chỉ liên quan nên liệt kê.'),
-        ('Kỹ năng', 'Chia thành ba nhóm: kỹ năng chuyên môn (liên quan trực tiếp đến công việc), kỹ năng mềm (giao tiếp, làm việc nhóm, lãnh đạo), và kỹ năng sử dụng công cụ (phần mềm, công nghệ).'),
-        ('Dự án', 'Mô tả các dự án đã tham gia với tiêu đề, vai trò, kỹ năng sử dụng và kết quả đạt được. Đặc biệt quan trọng với ứng viên ít kinh nghiệm làm việc.'),
-        ('Hoạt động ngoại khóa', 'Liệt kê các hoạt động liên quan đến công việc ứng tuyển, thể hiện sự năng động và kỹ năng mềm.'),
-        ('Sở thích', 'Chỉ ghi nếu liên quan đến công việc, cụ thể hóa (ví dụ: "đọc sách về kinh doanh" thay vì chỉ "đọc sách"). Nếu không liên quan nên bỏ qua.'),
-        ('Người tham chiếu', 'Chọn người phù hợp (cấp trên, đồng nghiệp, giáo viên), xin phép trước, cung cấp đầy đủ SĐT và email công ty. Đặt ở cuối CV.'),
+    cv_parts = [
+        ('Tiêu đề CV', 'Gồm họ tên ứng viên và vị trí ứng tuyển. Nên nhúng keyword từ JD vào tiêu đề để ATS dễ nhận diện.'),
+        ('Thông tin cá nhân', 'Bao gồm họ tên (in hoa, bold), email chuyên nghiệp (không nickname), số điện thoại đầy đủ, địa chỉ (chỉ ghi thành phố), và link LinkedIn/portfolio nếu có.'),
+        ('Mục tiêu nghề nghiệp', 'Chia ngắn hạn (1-3 năm) và dài hạn (3-5 năm). Phải cụ thể, có keyword từ JD, nhấn mạnh đóng góp cho công ty.'),
+        ('Kinh nghiệm làm việc', 'Sắp xếp theo thứ tự thời gian ngược (mới nhất ở trên). Mỗi mục ghi tên công ty, vị trí, thời gian. Mô tả trách nhiệm và thành tích, lượng hóa bằng số liệu cụ thể.'),
+        ('Trình độ học vấn', 'Thứ tự thời gian ngược. Ghi tên trường, ngành, thời gian, GPA (nếu cao), học bổng, khóa học liên quan.'),
+        ('Kỹ năng', 'Chia ba nhóm: chuyên môn (lập trình, phân tích dữ liệu...), mềm (giao tiếp, làm việc nhóm...), công cụ (Office, Git, Docker...).'),
+        ('Dự án', 'Rất hữu ích cho sinh viên/ít kinh nghiệm. Ghi tiêu đề, thời gian, vai trò, mô tả, kỹ năng sử dụng, kết quả lượng hóa.'),
+        ('Hoạt động ngoại khóa', 'Chọn hoạt động liên quan đến công việc ứng tuyển. Thể hiện sự năng động, kỹ năng mềm, tinh thần trách nhiệm.'),
+        ('Sở thích', 'Chỉ ghi nếu liên quan đến công việc. Cụ thể hóa: "Đọc sách về AI" thay vì "Đọc sách".'),
+        ('Người tham chiếu', 'Ghi tên, chức vụ, công ty, SĐT, email. Phải xin phép trước khi ghi tên.'),
+        ('Đặt tên file', 'Format: "CV - Họ tên - Vị trí.pdf" hoặc "CV - Vị trí - Họ tên.pdf". Ưu tiên PDF để giữ layout.'),
     ]
-
-    for i, (name, desc) in enumerate(components, 1):
+    for i, (name, desc) in enumerate(cv_parts, 1):
         p = doc.add_paragraph()
         run = p.add_run(f'{i}. {name}: ')
         run.bold = True
@@ -326,56 +313,54 @@ def create_theory(doc):
         run2.font.name = 'Times New Roman'
         run2.font.size = Pt(13)
 
-    add_para(doc, '2. Định dạng và tối ưu ATS', bold=True)
-
+    add_para(doc, '3. Tối ưu ATS', bold=True)
     add_para(doc,
-        'Hệ thống ATS (Applicant Tracking System) là công cụ sàng lọc hồ sơ tự động. '
-        'Để CV được ATS nhận diện đúng, cần tuân thủ: sử dụng tiêu đề chuẩn cho từng phần, '
-        'nhúng từ khóa từ mô tả công việc vào nội dung CV, tránh sử dụng bảng biểu phức tạp '
-        'hoặc hình ảnh, sử dụng phông chữ phổ biến (Times New Roman, Arial). '
-        'Định dạng file nên là PDF (giữ nguyên layout) hoặc Word (.docx, dễ chỉnh sửa). '
-        'Tên file đặt theo cấu trúc: "CV_HoTen_ViTri.pdf" hoặc "CV - Họ tên - Vị trí.pdf".'
+        'ATS (Applicant Tracking System) là hệ thống lọc CV tự động. Để tối ưu ATS: '
+        '(1) Sử dụng từ khóa từ JD trong mục tiêu, kinh nghiệm, kỹ năng; '
+        '(2) Cấu trúc rõ ràng với tiêu đề chuẩn; '
+        '(3) Định dạng Word hoặc PDF; '
+        '(4) Không dùng bảng biểu phức tạp, hình ảnh, ký tự đặc biệt; '
+        '(5) Font chữ chuẩn (Times New Roman, Arial).'
     )
 
-    add_para(doc, '3. Các lỗi thường gặp khi viết CV', bold=True)
-
-    errors = [
-        'Sử dụng email không chuyên nghiệp (biệt danh, ký tự đặc biệt quá nhiều, email trường học cũ)',
-        'Mục tiêu nghề nghiệp chung chung, không cụ thể, không phân chia ngắn hạn/dài hạn',
-        'Thời gian kinh nghiệm không sắp xếp theo thứ tự thời gian ngược',
-        'Kinh nghiệm làm việc không lượng hóa thành tích bằng số liệu',
-        'Lỗi chính tả và ngữ pháp trong CV',
-        'CV quá dài (vượt quá 2 trang A4)',
-        'Không tùy chỉnh CV theo từng vị trí ứng tuyển',
-        'Thiết kế quá phức tạp, nhiều màu sắc không cần thiết',
-        'Bảo mật thông tin cá nhân quá mức (ghi CMND, số tài khoản ngân hàng)',
+    add_para(doc, '4. Chín lỗi thường gặp', bold=True)
+    cv_errors = [
+        'Email không chuyên nghiệp (nickname, ký tự đặc biệt)',
+        'Mục tiêu nghề nghiệp chung chung, không cụ thể',
+        'Mục tiêu quá dài dòng, không súc tích',
+        'Mục tiêu không cá nhân hóa cho từng công ty',
+        'Lỗi chính tả trong CV',
+        'Không phân chia mục tiêu ngắn hạn/dài hạn',
+        'Mục tiêu không thực tế, vượt quá khả năng',
+        'Thời gian không theo trình tự ngược',
+        'Thông tin thời gian không chính xác',
     ]
-    for i, err in enumerate(errors, 1):
+    for i, err in enumerate(cv_errors, 1):
         p = doc.add_paragraph()
         run = p.add_run(f'{i}. {err}')
         run.font.name = 'Times New Roman'
         run.font.size = Pt(13)
 
-    add_para(doc, 'II. Lưu ý khi soạn thảo email ứng tuyển', bold=True, size=Pt(13))
+    add_heading_styled(doc, 'II. Email xin việc', level=2)
 
+    add_para(doc, '1. Định nghĩa và tình huống sử dụng', bold=True)
     add_para(doc,
-        'Email ứng tuyển là phương thức giao tiếp chính thức giữa ứng viên và nhà tuyển dụng, '
-        'được sử dụng để gửi CV và thư ứng tuyển. Email chuyên nghiệp giúp tạo ấn tượng '
-        'tích cực ban đầu.'
+        'Email xin việc là phương thức giao tiếp kỹ thuật số chính thức, được sử dụng để gửi CV '
+        'và thư ứng tuyển đến nhà tuyển dụng. Email khác với cover letter ở chỗ: email là nội dung '
+        'inline (trực tiếp trong thân email), ngắn gọn (150-200 từ), trong khi cover letter là file '
+        'riêng chi tiết hơn (1 trang A4). Email được dùng khi nhà tuyển dụng không yêu cầu cover letter riêng.'
     )
 
-    add_para(doc, '1. Cấu trúc email ứng tuyển', bold=True)
-
+    add_para(doc, '2. Bảy phần cấu trúc email', bold=True)
     email_parts = [
-        ('Dòng chủ đề', 'Rõ ràng, chứa từ khóa. Định dạng: "Họ tên - Vị trí ứng tuyển - Công ty - Ngày". Ví dụ: "Nguyễn Văn A - Nhân viên Marketing - Công ty ABC - 17/05/2026".'),
-        ('Người nhận', 'Email chính của phòng nhân sự hoặc người tuyển dụng. CC người liên quan nếu có.'),
-        ('Lời chào', 'Phù hợp với ngữ cảnh: "Kính gửi Quý Công ty ABC," hoặc "Kính gửi Anh/Chị [Tên]," nếu biết tên người tuyển dụng.'),
-        ('Nội dung', 'Gồm 3 phần: giới thiệu (họ tên, vị trí ứng tuyển, nguồn biết tin), lý do ứng tuyển + kỹ năng phù hợp, kết luận + nhấn mạnh đóng góp cho công ty.'),
-        ('Lời kết', 'Sử dụng lời kết lịch sự: "Trân trọng cảm ơn," hoặc "Trân trọng,".'),
-        ('File đính kèm', 'Đính kèm CV và thư ứng tuyển (nếu có). Đặt tên file khoa học: "CV_HoTen_ViTri.pdf", "ThuUngTuyen_HoTen_ViTri.pdf". Kiểm tra đã đính kèm trước khi gửi.'),
-        ('Chữ ký', 'Bao gồm họ tên, vị trí, email, số điện thoại, LinkedIn (nếu có).'),
+        ('Dòng chủ đề', 'Format: "Họ tên - Vị trí ứng tuyển - Công ty". Rõ ràng, ngắn gọn, chứa từ khóa.'),
+        ('Người nhận', 'Email chính của phòng nhân sự hoặc người tuyển dụng.'),
+        ('Lời chào', 'Tùy ngữ cảnh: "Kính gửi Quý Công ty" hoặc "Kính gửi Anh/Chị [Tên]".'),
+        ('Nội dung (3 phần)', 'Giới thiệu (1-2 câu): họ tên, vị trí. Lý do + kỹ năng (2-3 câu). Kết luận: nhấn mạnh đóng góp cho công ty.'),
+        ('Lời kết', '"Trân trọng," hoặc "Trân trọng cảm ơn,".'),
+        ('File đính kèm', 'CV và cover letter (nếu có), định dạng PDF hoặc .docx. Đặt tên file chuẩn.'),
+        ('Chữ ký', 'Họ tên, SĐT, email, LinkedIn/portfolio.'),
     ]
-
     for i, (name, desc) in enumerate(email_parts, 1):
         p = doc.add_paragraph()
         run = p.add_run(f'{i}. {name}: ')
@@ -386,26 +371,25 @@ def create_theory(doc):
         run2.font.name = 'Times New Roman'
         run2.font.size = Pt(13)
 
-    add_para(doc, '2. So sánh email xin việc và thư ứng tuyển', bold=True)
-
+    add_para(doc, '3. So sánh email xin việc và cover letter', bold=True)
     add_para(doc,
-        'Email xin việc và thư ứng tuyển (cover letter) có những điểm khác biệt cơ bản. '
-        'Email xin việc là nội dung inline trong email, ngắn gọn (150-200 từ), dùng để giới thiệu '
-        'và hướng dẫn đọc CV. Thư ứng tuyển là file riêng (.docx/.pdf), chi tiết hơn (1 trang A4), '
-        'giải thích chi tiết lý do ứng tuyển và chứng minh sự phù hợp. '
-        'Khi vị trí cấp cao hoặc có yêu cầu, nên gửi cả email và thư ứng tuyển.'
+        'Email xin việc và cover letter có mục đích tương tự nhưng khác nhau về định dạng '
+        'và mức độ chi tiết. Email là nội dung inline trong thân email, ngắn gọn (150-200 từ), '
+        'dùng để giới thiệu và hướng dẫn đọc CV. Cover letter là file riêng (.docx/.pdf), '
+        'chi tiết hơn (1 trang A4), giải thích sâu lý do ứng tuyển và sự phù hợp. '
+        'Khi nhà tuyển dụng yêu cầu cover letter riêng, email chỉ cần ngắn gọn giới thiệu '
+        'và liệt kê file đính kèm.'
     )
 
-    add_para(doc, '3. Các lỗi thường gặp khi viết email', bold=True)
-
+    add_para(doc, '4. Bảy lỗi thường gặp khi viết email', bold=True)
     email_errors = [
-        'Thiếu dòng chủ đề hoặc chủ đề không rõ ràng',
-        'Nội dung email quá dài dòng, không súc tích',
-        'Lỗi chính tả và ngữ pháp',
-        'Quên đính kèm file (nhắc đến CV nhưng không gửi)',
-        'Đặt tên file không khoa học hoặc không đúng yêu cầu',
-        'Sử dụng email không chuyên nghiệp',
-        'Không phản hồi email của nhà tuyển dụng hoặc phản hồi quá chậm',
+        'Hiểu nhầm email chỉ cần kỹ năng đơn giản — email cần chuyên nghiệp như cover letter',
+        'Lạm dụng gửi quá nhiều email cho cùng một vị trí',
+        'Định dạng kém: font, màu sắc, khoảng cách không phù hợp',
+        'Nội dung dài dòng, không súc tích',
+        'Lỗi chính tả — không kiểm tra trước khi gửi',
+        'Thiếu dòng chủ đề (subject line)',
+        'Quên file đính kèm khi đã nhắc đến CV trong nội dung',
     ]
     for i, err in enumerate(email_errors, 1):
         p = doc.add_paragraph()
@@ -464,7 +448,7 @@ def create_practice(doc):
 
     add_para(doc,
         'CV được soạn cho thành viên Phạm Tuấn Anh, ứng tuyển vị trí AI Engineer Intern. '
-        'CV được trình bày trong file CV_PhamTuanAnh_AIEngineerIntern_FIXED.docx, '
+        'CV được trình bày trong file CV_PhamTuanAnh_AIEngineerIntern_Rewritten.docx, '
         'đảm bảo các yêu cầu: font Times New Roman, lề A4 theo quy định, '
         'đầy đủ các thành phần chính, tối ưu ATS, độ dài 1-2 trang A4.'
     )
@@ -492,15 +476,15 @@ def create_practice(doc):
 
     add_para(doc,
         'Thư ứng tuyển và email được soạn dựa trên CV của Phạm Tuấn Anh, '
-        'ứng tuyển vị trí AI Engineer Intern tại FPT Smart Cloud. '
-        'Nội dung được trình bày trong file ThuUngTuyen_Email_PhamTuanAnh.docx.'
+        'ứng tuyển vị trí AI Engineer Intern tại VinAI. '
+        'Nội dung được trình bày trong file ThuUngTuyen_Email_PhamTuanAnh_VinAI.docx.'
     )
 
     add_para(doc, 'Tóm tắt nội dung:', bold=True)
 
     add_para(doc, 'Thư ứng tuyển (250-300 chữ):', bold=True)
     add_para(doc,
-        'Giới thiệu bản thân là sinh viên PTIT, nêu lý do ứng tuyển vào FPT Smart Cloud. '
+        'Giới thiệu bản thân là sinh viên PTIT, nêu lý do ứng tuyển vào VinAI. '
         'Trình bày kinh nghiệm nghiên cứu CV và NLP, các dự án đã hoàn thành (ViT, speech recognition, LSTM). '
         'Nhấn mạnh đóng góp dự kiến: phát triển mô hình AI, tối ưu pipeline ML, đóng góp vào sản phẩm AI. '
         'Kết thúc bằng lời cảm ơn và mong muốn phỏng vấn.'
@@ -508,7 +492,7 @@ def create_practice(doc):
 
     add_para(doc, 'Email gửi hồ sơ:', bold=True)
     add_para(doc,
-        'Chủ đề: "Phạm Tuấn Anh - AI Engineer Intern - FPT Smart Cloud". '
+        'Chủ đề: "Phạm Tuấn Anh - AI Engineer Intern - VinAI". '
         'Nội dung 3 phần: giới thiệu ngắn gọn, lý do ứng tuyển + kỹ năng phù hợp, '
         'kết luận nhấn mạnh đóng góp cho công ty. '
         'File đính kèm: CV_PhamTuanAnh_AIEngineerIntern.pdf, ThuUngTuyen_PhamTuanAnh_AIEngineerIntern.pdf.'
@@ -654,7 +638,7 @@ def create_slides_placeholder(doc):
             run.bold = True
             run.font.size = Pt(14)
             run.font.name = 'Times New Roman'
-            run2 = p.add_run('CV: Phạm Tuấn Anh - AI Engineer Intern\nThư ứng tuyển + Email: FPT Smart Cloud')
+            run2 = p.add_run('CV: Phạm Tuấn Anh - AI Engineer Intern\nThư ứng tuyển + Email: VinAI')
             run2.font.size = Pt(12)
             run2.font.name = 'Times New Roman'
         elif slide_num == 6:
